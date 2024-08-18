@@ -207,132 +207,140 @@ if __name__ == '__main__':
         # db.session.commit()
 
 
-        users_data = [
-            Users(name="John Doe", gender=True, birthDate=datetime(1980, 5, 15), phone="123-456-7890",
-                  email="john.doe@example.com", address="123 Elm St", photoInf="photo1", photoPath="/photos/john.jpg"),
-            Users(name="Jane Smith", gender=False, birthDate=datetime(1990, 8, 22), phone="234-567-8901",
-                  email="jane.smith@example.com", address="456 Oak St", photoInf="photo2",
-                  photoPath="/photos/jane.jpg"),
-            Users(name="Alice Johnson", gender=True, birthDate=datetime(1985, 12, 30), phone="345-678-9012",
-                  email="alice.johnson@example.com", address="789 Pine St", photoInf="photo3",
-                  photoPath="/photos/alice.jpg"),
-            Users(name="Bob Brown", gender=True, birthDate=datetime(1975, 3, 5), phone="456-789-0123",
-                  email="bob.brown@example.com", address="101 Maple St", photoInf="photo4",
-                  photoPath="/photos/bob.jpg"),
-            Users(name="Emily Davis", gender=False, birthDate=datetime(1988, 7, 19), phone="567-890-1234",
-                  email="emily.davis@example.com", address="202 Birch St", photoInf="photo5",
-                  photoPath="/photos/emily.jpg"),
-            Users(name="Michael Wilson", gender=True, birthDate=datetime(1995, 11, 25), phone="678-901-2345",
-                  email="michael.wilson@example.com", address="303 Cedar St", photoInf="photo6",
-                  photoPath="/photos/michael.jpg"),
-            Users(name="Olivia Lee", gender=False, birthDate=datetime(1992, 2, 14), phone="789-012-3456",
-                  email="olivia.lee@example.com", address="404 Spruce St", photoInf="photo7",
-                  photoPath="/photos/olivia.jpg"),
-            Users(name="James Miller", gender=True, birthDate=datetime(1983, 9, 9), phone="890-123-4567",
-                  email="james.miller@example.com", address="505 Fir St", photoInf="photo8",
-                  photoPath="/photos/james.jpg"),
-            Users(name="Sophia Taylor", gender=False, birthDate=datetime(2000, 4, 21), phone="901-234-5678",
-                  email="sophia.taylor@example.com", address="606 Redwood St", photoInf="photo9",
-                  photoPath="/photos/sophia.jpg"),
-            Users(name="Liam Anderson", gender=True, birthDate=datetime(1987, 10, 30), phone="012-345-6789",
-                  email="liam.anderson@example.com", address="707 Sequoia St", photoInf="photo10",
-                  photoPath="/photos/liam.jpg"),
-        ]
-        db.session.add_all(users_data)
-        db.session.commit()
-        # Emplyoee
-        employees_data = [
-            Employees(id=1),
-            Employees(id=2),
-            Employees(id=3),
-            Employees(id=4),
-            Employees(id=5)
+        # users_data = [
+        #     Users(name="John Doe", gender=True, birthDate=datetime(1980, 5, 15), phone="123-456-7890",
+        #           email="john.doe@example.com", address="123 Elm St", photoInf="photo1", photoPath="/photos/john.jpg"),
+        #     Users(name="Jane Smith", gender=False, birthDate=datetime(1990, 8, 22), phone="234-567-8901",
+        #           email="jane.smith@example.com", address="456 Oak St", photoInf="photo2",
+        #           photoPath="/photos/jane.jpg"),
+        #     Users(name="Alice Johnson", gender=True, birthDate=datetime(1985, 12, 30), phone="345-678-9012",
+        #           email="alice.johnson@example.com", address="789 Pine St", photoInf="photo3",
+        #           photoPath="/photos/alice.jpg"),
+        #     Users(name="Bob Brown", gender=True, birthDate=datetime(1975, 3, 5), phone="456-789-0123",
+        #           email="bob.brown@example.com", address="101 Maple St", photoInf="photo4",
+        #           photoPath="/photos/bob.jpg"),
+        #     Users(name="Emily Davis", gender=False, birthDate=datetime(1988, 7, 19), phone="567-890-1234",
+        #           email="emily.davis@example.com", address="202 Birch St", photoInf="photo5",
+        #           photoPath="/photos/emily.jpg"),
+        #     Users(name="Michael Wilson", gender=True, birthDate=datetime(1995, 11, 25), phone="678-901-2345",
+        #           email="michael.wilson@example.com", address="303 Cedar St", photoInf="photo6",
+        #           photoPath="/photos/michael.jpg"),
+        #     Users(name="Olivia Lee", gender=False, birthDate=datetime(1992, 2, 14), phone="789-012-3456",
+        #           email="olivia.lee@example.com", address="404 Spruce St", photoInf="photo7",
+        #           photoPath="/photos/olivia.jpg"),
+        #     Users(name="James Miller", gender=True, birthDate=datetime(1983, 9, 9), phone="890-123-4567",
+        #           email="james.miller@example.com", address="505 Fir St", photoInf="photo8",
+        #           photoPath="/photos/james.jpg"),
+        #     Users(name="Sophia Taylor", gender=False, birthDate=datetime(2000, 4, 21), phone="901-234-5678",
+        #           email="sophia.taylor@example.com", address="606 Redwood St", photoInf="photo9",
+        #           photoPath="/photos/sophia.jpg"),
+        #     Users(name="Liam Anderson", gender=True, birthDate=datetime(1987, 10, 30), phone="012-345-6789",
+        #           email="liam.anderson@example.com", address="707 Sequoia St", photoInf="photo10",
+        #           photoPath="/photos/liam.jpg"),
+        # ]
+        # db.session.add_all(users_data)
+        # db.session.commit()
+        # # Emplyoee
+        # employees_data = [
+        #     Employees(id=1),
+        #     Employees(id=2),
+        #     Employees(id=3),
+        #     Employees(id=4),
+        #     Employees(id=5)
+        #
+        # ]
+        # db.session.add_all(employees_data)
+        # db.session.commit()
+        # #
+        # customers_data = [
+        #     Customers(id=6),
+        #     Customers(id=7),
+        #     Customers(id=8),
+        #     Customers(id=9),
+        #     Customers(id=10)
+        # ]
+        # db.session.add_all(customers_data)
+        # db.session.commit()
+        # #
+        # categories_data = [
+        #     Categories(name='Áo sơ mi', photoCategory='photo1'),
+        #     Categories(name='Quần jeans', photoCategory='photo1'),
+        #     Categories(name='Áo khoác', photoCategory='photo1'),
+        #     Categories(name='Giày thể thao' ,photoCategory='photo1'),
+        #     Categories(name='Phụ kiện thời trang', photoCategory='photo1')
+        # ]
+        # # Thêm dữ liệu vào cơ sở dữ liệu
+        # db.session.add_all(categories_data)
+        # db.session.commit()
 
-        ]
-        db.session.add_all(employees_data)
-        db.session.commit()
-        #
-        customers_data = [
-            Customers(id=6),
-            Customers(id=7),
-            Customers(id=8),
-            Customers(id=9),
-            Customers(id=10)
-        ]
-        db.session.add_all(customers_data)
-        db.session.commit()
-        #
-        categories_data = [
-            Categories(name='Áo sơ mi', photoCategory='photo1'),
-            Categories(name='Quần jeans', photoCategory='photo1'),
-            Categories(name='Áo khoác', photoCategory='photo1'),
-            Categories(name='Giày thể thao' ,photoCategory='photo1'),
-            Categories(name='Phụ kiện thời trang', photoCategory='photo1')
-        ]
-        # Thêm dữ liệu vào cơ sở dữ liệu
-        db.session.add_all(categories_data)
-        db.session.commit()
-        from datetime import datetime
 
         products_data = [
             Products(name='Áo sơ mi trắng', price=299000, description='Áo sơ mi trắng chất liệu cotton cao cấp',
-                     imageProduct='white_shirt.jpg', category_id=1, unitsInStock=50, discount=10,
+                     imageProduct='shirt-5.jpg', category_id=1, unitsInStock=50, discount=10,
                      createdDate=datetime(2024, 1, 1), updatedDate=datetime(2024, 8, 1)),
             Products(name='Áo sơ mi xanh', price=319000, description='Áo sơ mi xanh dương nhẹ nhàng',
-                     imageProduct='blue_shirt.jpg', category_id=1, unitsInStock=30, discount=5,
+                     imageProduct='shirt-3.jpg', category_id=1, unitsInStock=30, discount=5,
                      createdDate=datetime(2024, 1, 10), updatedDate=datetime(2024, 8, 2)),
             Products(name='Áo sơ mi kẻ sọc', price=329000, description='Áo sơ mi kẻ sọc hiện đại',
-                     imageProduct='striped_shirt.jpg', category_id=1, unitsInStock=20, discount=15,
+                     imageProduct='shirt-6.jpg', category_id=1, unitsInStock=20, discount=15,
                      createdDate=datetime(2024, 2, 1), updatedDate=datetime(2024, 8, 3)),
             Products(name='Áo sơ mi họa tiết', price=339000, description='Áo sơ mi họa tiết đa dạng',
-                     imageProduct='patterned_shirt.jpg', category_id=1, unitsInStock=45, discount=15,
+                     imageProduct='shirt-7.jpg', category_id=1, unitsInStock=45, discount=15,
                      createdDate=datetime(2024, 7, 1), updatedDate=datetime(2024, 8, 12)),
 
             Products(name='Quần jeans xanh', price=399000, description='Quần jeans chất liệu denim bền bỉ',
-                     imageProduct='blue_jeans.jpg', category_id=2, unitsInStock=40, discount=20,
+                     imageProduct='trousers-2.jpg', category_id=2, unitsInStock=40, discount=20,
                      createdDate=datetime(2024, 3, 1), updatedDate=datetime(2024, 8, 4)),
             Products(name='Quần jeans đen', price=419000, description='Quần jeans đen thời trang',
-                     imageProduct='black_jeans.jpg', category_id=2, unitsInStock=35, discount=25,
+                     imageProduct='trousers-1.jpg', category_id=2, unitsInStock=35, discount=25,
                      createdDate=datetime(2024, 3, 10), updatedDate=datetime(2024, 8, 5)),
             Products(name='Quần shorts', price=349000, description='Quần shorts mùa hè thoải mái',
-                     imageProduct='shorts.jpg', category_id=2, unitsInStock=50, discount=10,
+                     imageProduct='trousers-3.jpg', category_id=2, unitsInStock=50, discount=10,
                      createdDate=datetime(2024, 7, 10), updatedDate=datetime(2024, 8, 13)),
 
             Products(name='Áo khoác da', price=799000, description='Áo khoác da cao cấp cho mùa đông',
-                     imageProduct='leather_jacket.jpg', category_id=3, unitsInStock=25, discount=30,
+                     imageProduct='shirt-8.jpg', category_id=3, unitsInStock=25, discount=30,
                      createdDate=datetime(2024, 4, 1), updatedDate=datetime(2024, 8, 6)),
             Products(name='Áo khoác bomber', price=729000, description='Áo khoác bomber kiểu dáng trẻ trung',
-                     imageProduct='bomber_jacket.jpg', category_id=3, unitsInStock=30, discount=10,
+                     imageProduct='shirt-4.jpg', category_id=3, unitsInStock=30, discount=10,
                      createdDate=datetime(2024, 4, 15), updatedDate=datetime(2024, 8, 7)),
             Products(name='Áo khoác denim', price=749000, description='Áo khoác denim trẻ trung',
-                     imageProduct='denim_jacket.jpg', category_id=3, unitsInStock=20, discount=5,
+                     imageProduct='shirt-2.jpg', category_id=3, unitsInStock=20, discount=5,
                      createdDate=datetime(2024, 8, 1), updatedDate=datetime(2024, 8, 14)),
             Products(name='Áo khoác hoodie', price=669000, description='Áo khoác hoodie ấm áp',
-                     imageProduct='hoodie.jpg', category_id=3, unitsInStock=45, discount=15,
+                     imageProduct='shirt-9.jpg', category_id=3, unitsInStock=45, discount=15,
                      createdDate=datetime(2024, 9, 1), updatedDate=datetime(2024, 8, 17)),
 
-            Products(name='Giày thể thao trắng', price=899000, description='Giày thể thao trắng năng động',
-                     imageProduct='white_sneakers.jpg', category_id=4, unitsInStock=50, discount=5,
+            Products(name='Giày thể thao hồng', price=899000, description='Giày thể thao hồng năng động',
+                     imageProduct='shoes-8.png', category_id=4, unitsInStock=50, discount=5,
                      createdDate=datetime(2024, 5, 1), updatedDate=datetime(2024, 8, 8)),
             Products(name='Giày thể thao đen', price=919000, description='Giày thể thao đen cá tính',
-                     imageProduct='black_sneakers.jpg', category_id=4, unitsInStock=40, discount=10,
+                     imageProduct='shoes-6.jpg', category_id=4, unitsInStock=40, discount=10,
                      createdDate=datetime(2024, 5, 10), updatedDate=datetime(2024, 8, 9)),
-            Products(name='Giày lười', price=699000, description='Giày lười thanh lịch', imageProduct='loafers.jpg',
+            Products(name='Giày lười', price=699000, description='Giày lười thanh lịch', imageProduct='shoes-1.png',
                      category_id=4, unitsInStock=35, discount=20, createdDate=datetime(2024, 8, 10),
                      updatedDate=datetime(2024, 8, 15)),
 
             Products(name='Thắt lưng da', price=199000, description='Thắt lưng da sang trọng',
-                     imageProduct='leather_belt.jpg', category_id=5, unitsInStock=60, discount=15,
+                     imageProduct='leather-1.jpg', category_id=5, unitsInStock=60, discount=15,
                      createdDate=datetime(2024, 6, 1), updatedDate=datetime(2024, 8, 10)),
             Products(name='Kính mát thời trang', price=299000, description='Kính mát phong cách',
-                     imageProduct='fashion_sunglasses.jpg', category_id=5, unitsInStock=70, discount=20,
+                     imageProduct='sunglasses-1.jpg', category_id=5, unitsInStock=70, discount=20,
                      createdDate=datetime(2024, 6, 15), updatedDate=datetime(2024, 8, 11)),
-            Products(name='Mũ lưỡi trai', price=149000, description='Mũ lưỡi trai phong cách', imageProduct='cap.jpg',
+            Products(name='Mũ lưỡi trai', price=149000, description='Mũ lưỡi trai phong cách', imageProduct='cap-1.jpg',
                      category_id=5, unitsInStock=80, discount=10, createdDate=datetime(2024, 8, 15),
                      updatedDate=datetime(2024, 8, 16)),
-
+            Products(name='Kính mát Leyean', price=299000, description='Kính mát phong cách thương hiệu Leyean',
+                     imageProduct='sunglasses-2.jpg', category_id=5, unitsInStock=70, discount=20,
+                     createdDate=datetime(2024, 6, 15), updatedDate=datetime(2024, 8, 11)),
+            Products(name='Túi đeo thời trang Oupica', price=299000, description='Túi đem phong cách',
+                     imageProduct='bag-1.png', category_id=5, unitsInStock=70, discount=20,
+                     createdDate=datetime(2024, 6, 15), updatedDate=datetime(2024, 8, 11)),
+            Products(name='Đồng hồ nam Pasika', price=299000, description='Đồng hồ nam màu đen thương hiệu Pasiko',
+                     imageProduct='watch-1.jpg', category_id=5, unitsInStock=70, discount=20,
+                     createdDate=datetime(2024, 6, 15), updatedDate=datetime(2024, 8, 11)),
             Products(name='Áo sơ mi caro', price=309000, description='Áo sơ mi caro lịch lãm',
-                     imageProduct='checked_shirt.jpg', category_id=1, unitsInStock=25, discount=10,
+                     imageProduct='shirt-10.jpg', category_id=1, unitsInStock=25, discount=10,
                      createdDate=datetime(2024, 1, 20), updatedDate=datetime(2024, 8, 18)),
             # Products(name='Áo khoác gió', price=659000, description='Áo khoác gió chống nước',
             #          imageProduct='windbreaker.jpg', category_id=3, unitsInStock=30, discount=5,
@@ -473,18 +481,18 @@ if __name__ == '__main__':
         db.session.add_all(products_data)
         db.session.commit()
 
-        account_data = [
-            Accounts(name="Trần Văn Bình", email="tranvanb@example.com",
-                     username="admin",  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_id=1, users_role_id=UsersRole.ADMIN, active=True),
-            Accounts(name="Lê Thu Cúc", email="lethic@example.com",
-                     username="nhanvien1",  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_id=3,users_role_id=UsersRole.EMPLOYEE, active=True),
-            Accounts(name="Phạm Anh Dương", email="phamvand@example.com",
-                     username="nhanvien2",  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_id=4,users_role_id=UsersRole.EMPLOYEE, active=True),
-            Accounts(name="Nguyễn Bùi An Ly", email="nguyenthie@example.com",
-                     username="kh1",  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_id=6,users_role_id=UsersRole.CUSTOMER, active=True),
-            Accounts(name="Hoàng Văn Nam", email="hoangvanf@example.com",
-                     username="kh2",  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_id=7,users_role_id=UsersRole.CUSTOMER, active=True)
-        ]
-
-        db.session.add_all(account_data)
-        db.session.commit()
+        # account_data = [
+        #     Accounts(name="Trần Văn Bình", email="tranvanb@example.com",
+        #              username="admin",  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_id=1, users_role_id=UsersRole.ADMIN, active=True),
+        #     Accounts(name="Lê Thu Cúc", email="lethic@example.com",
+        #              username="nhanvien1",  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_id=3,users_role_id=UsersRole.EMPLOYEE, active=True),
+        #     Accounts(name="Phạm Anh Dương", email="phamvand@example.com",
+        #              username="nhanvien2",  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_id=4,users_role_id=UsersRole.EMPLOYEE, active=True),
+        #     Accounts(name="Nguyễn Bùi An Ly", email="nguyenthie@example.com",
+        #              username="kh1",  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_id=6,users_role_id=UsersRole.CUSTOMER, active=True),
+        #     Accounts(name="Hoàng Văn Nam", email="hoangvanf@example.com",
+        #              username="kh2",  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_id=7,users_role_id=UsersRole.CUSTOMER, active=True)
+        # ]
+        #
+        # db.session.add_all(account_data)
+        # db.session.commit()
