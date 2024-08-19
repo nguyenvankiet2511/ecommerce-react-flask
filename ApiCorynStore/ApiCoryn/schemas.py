@@ -1,5 +1,5 @@
-from ApiCorynStore.ApiCoryn import ma
-from ApiCorynStore.ApiCoryn.model import UsersRole
+from ApiCoryn import ma
+from ApiCoryn.model import UsersRole
 from marshmallow import fields
 
 class UsersRoleField(fields.Field):

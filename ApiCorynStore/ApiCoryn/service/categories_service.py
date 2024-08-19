@@ -1,6 +1,6 @@
-from ApiCorynStore.ApiCoryn import db
-from ApiCorynStore.ApiCoryn.model import Categories
-from ApiCorynStore.ApiCoryn.schemas import CategoriesSchema
+from ApiCoryn import db
+from ApiCoryn.model import Categories
+from ApiCoryn.schemas import CategoriesSchema
 from flask import request
 category_schema = CategoriesSchema()
 categories_schema = CategoriesSchema(many=True)

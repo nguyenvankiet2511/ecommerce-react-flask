@@ -1,6 +1,6 @@
-from ApiCorynStore.ApiCoryn import db
-from ApiCorynStore.ApiCoryn.model import Products
-from ApiCorynStore.ApiCoryn.schemas import ProductsSchema
+from ApiCoryn import db
+from ApiCoryn.model import Products
+from ApiCoryn.schemas import ProductsSchema
 from flask import request, jsonify
 from datetime import datetime
 product_schema = ProductsSchema()

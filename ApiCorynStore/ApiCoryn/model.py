@@ -1,5 +1,5 @@
 import hashlib
-from ApiCorynStore.ApiCoryn import db, app
+from ApiCoryn import db, app
 from enum import Enum as UserEnum
 from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Numeric, Text,Enum

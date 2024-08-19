@@ -1,6 +1,6 @@
-from ApiCorynStore.ApiCoryn import app
-from ApiCorynStore.ApiCoryn.service import users_service,categories_service, products_service
-from ApiCorynStore.ApiCoryn.model import UsersRole,Accounts
+from ApiCoryn import app
+from ApiCoryn.service import users_service,categories_service, products_service
+from ApiCoryn.model import UsersRole,Accounts
 from flask import render_template, session, flash, jsonify, redirect, request, url_for
 from flask_login import login_user, current_user, logout_user
 
