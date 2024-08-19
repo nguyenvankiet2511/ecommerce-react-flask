@@ -22,7 +22,7 @@ export default function Section() {
       <section>
         <div
           class="main_slider"
-          style={{ backgroundImage: `url('/images/slider_1.jpg')` }}
+          style={{ backgroundImage: `url('/images/slide-02.jpg')` }}
         >
           <div class="container fill_height">
             <div class="row align-items-center fill_height">
@@ -109,15 +109,15 @@ export default function Section() {
               return (
                 <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
                   <div className="product d-flex flex-column">
-                    <a href="#" className="img-prod">
+                    <Link to="/products" className="img-prod">
                       <img
                         className="img-fluid"
                         src={`images/${product.imageProduct}`}
-                        alt="Colorlib Template"
+                        alt="Product Image"
                       />
                       <span className="status">{product.discount}% Off</span>
                       <div className="overlay"></div>
-                    </a>
+                    </Link>
                     <div className="text py-3 pb-4 px-3">
                       <div className="d-flex">
                         <div className="cat">
@@ -144,7 +144,7 @@ export default function Section() {
                         </div>
                       </div>
                       <h3>
-                        <a href="#">{product.name}</a>
+                        <Link to="/products">{product.name}</Link>
                       </h3>
                       <div className="pricing">
                         <p className="price">
@@ -179,67 +179,6 @@ export default function Section() {
                 </div>
               );
             })}
-            <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
-              <div className="product d-flex flex-column">
-                <a href="#" className="img-prod">
-                  <img
-                    className="img-fluid"
-                    src="images/shoes-1.png"
-                    alt="Colorlib Template"
-                  />
-                  <span className="status">10% Off</span>
-                  <div className="overlay"></div>
-                </a>
-                <div className="text py-3 pb-4 px-3">
-                  <div className="d-flex">
-                    <div className="cat">
-                      <span>Lifestyle</span>
-                    </div>
-                    <div className="rating">
-                      <p className="text-right mb-0">
-                        <a href="#">
-                          <span className="ion-ios-star-outline"></span>
-                        </a>
-                        <a href="#">
-                          <span className="ion-ios-star-outline"></span>
-                        </a>
-                        <a href="#">
-                          <span className="ion-ios-star-outline"></span>
-                        </a>
-                        <a href="#">
-                          <span className="ion-ios-star-outline"></span>
-                        </a>
-                        <a href="#">
-                          <span className="ion-ios-star-outline"></span>
-                        </a>
-                      </p>
-                    </div>
-                  </div>
-                  <h3>
-                    <a href="#">Produts1</a>
-                  </h3>
-                  <div className="pricing">
-                    <p className="price">
-                      <span className="mr-2 price-dc">120000VND</span>
-                      <span className="price-sale">2300000VND</span>
-                    </p>
-                  </div>
-                  <p className="bottom-area d-flex px-3">
-                    <a href="#" className="add-to-cart text-center py-2 mr-1">
-                      <span>
-                        Add to cart <i className="ion-ios-add ml-1"></i>
-                      </span>
-                    </a>
-                    <a href="#" className="buy-now text-center py-2">
-                      Buy now
-                      <span>
-                        <i className="ion-ios-cart ml-1"></i>
-                      </span>
-                    </a>
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -260,7 +199,7 @@ export default function Section() {
                     the Semantics, a large language ocean.
                   </p>
                   <p>
-                    <Link to="/" className="btn btn-black px-3 py-2">
+                    <Link to="/home" className="btn btn-black px-3 py-2">
                       Shop now
                     </Link>
                   </p>

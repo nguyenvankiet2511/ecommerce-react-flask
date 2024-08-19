@@ -17,20 +17,23 @@ import "./assets/css/jquery.timepicker.css";
 import "./assets/css/flaticon.css";
 import "./assets/css/icomoon.css";
 
+
 import Products from "./components/Products";
+import ScrollToTop from "./components/layout/ScrollToTop";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Products />} />
-      </Routes>
+      <ScrollToTop>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/products" element={<Products />} />
+        </Routes>
+      </ScrollToTop>
     </BrowserRouter>
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// Optionally, you can add reportWebVitals for performance measurement
 reportWebVitals();

@@ -1,112 +1,245 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
 export default function Header() {
+  
+  const [menuActive, setMenuActive] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState({
+    currency: false,
+    language: false,
+    account: false,
+  });
+
+  const headerRef = useRef(null);
+  const topNavRef = useRef(null);
+  const menuRef = useRef(null);
+  const fsOverlayRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => setHeader();
+    const handleScroll = () => setHeader();
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [menuActive]);
+
+  const setHeader = () => {
+    const header = headerRef.current;
+    if (window.innerWidth < 992) {
+      header.style.top = window.scrollY > 100 ? "0" : "0";
+    } else {
+      header.style.top = window.scrollY > 100 ? "-50px" : "0";
+    }
+
+    if (window.innerWidth > 991 && menuActive) {
+      closeMenu();
+    }
+  };
+
+  const openMenu = () => {
+    menuRef.current.classList.add("active");
+    fsOverlayRef.current.style.pointerEvents = "auto";
+    setMenuActive(true);
+  };
+
+  const closeMenu = () => {
+    menuRef.current.classList.remove("active");
+    fsOverlayRef.current.style.pointerEvents = "none";
+    setMenuActive(false);
+  };
+  
+
+  const toggleDropdown = (dropdown) => {
+    setDropdownOpen((prev) => ({
+      ...prev,
+      [dropdown]: !prev[dropdown],
+    }));
+  
+  };
+
   return (
     <div>
-      <div className="py-1 bg-black">
-        <div className="container">
-          <div className="row no-gutters d-flex align-items-start align-items-center px-md-0">
-            <div className="col-lg-12 d-block">
-              <div className="row d-flex">
-                <div className="col-md pr-4 d-flex topper align-items-center">
-                  <div className="icon mr-2 d-flex justify-content-center align-items-center">
-                    <span className="icon-phone2"></span>
-                  </div>
-                  <span className="text">+ 1235 2355 98</span>
-                </div>
-                <div className="col-md pr-4 d-flex topper align-items-center">
-                  <div className="icon mr-2 d-flex justify-content-center align-items-center">
-                    <span className="icon-paper-plane"></span>
-                  </div>
-                  <span className="text">youremail@email.com</span>
-                </div>
-                <div className="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
-                  <span className="text">
-                    3-5 Business days delivery &amp; Free Returns
-                  </span>
+      <header className="header trans_300" ref={headerRef}>
+        <div className="top_nav" ref={topNavRef}>
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6">
+                <div className="top_nav_left">Free shipping on all orders over $50</div>
+              </div>
+              <div className="col-md-6 text-right">
+                <div className="top_nav_right">
+                  <ul className="top_nav_menu">
+                    <li
+                      className="currency"
+                      onMouseEnter={() => toggleDropdown("currency")}
+                      onMouseLeave={() => toggleDropdown("currency")}
+                    >
+                      <a href="#">
+                        usd
+                        <i className="fa fa-angle-down"></i>
+                      </a>
+                      {dropdownOpen.currency && (
+                        <ul className="currency_selection">
+                          <li><a href="#">cad</a></li>
+                          <li><a href="#">aud</a></li>
+                          <li><a href="#">eur</a></li>
+                          <li><a href="#">gbp</a></li>
+                        </ul>
+                      )}
+                    </li>
+                    <li
+                      className="language"
+                      onMouseEnter={() => toggleDropdown("language")}
+                      onMouseLeave={() => toggleDropdown("language")}
+                    >
+                      <a href="#">
+                        English
+                        <i className="fa fa-angle-down"></i>
+                      </a>
+                      {dropdownOpen.language && (
+                        <ul className="language_selection">
+                          <li><a href="#">French</a></li>
+                          <li><a href="#">Italian</a></li>
+                          <li><a href="#">German</a></li>
+                          <li><a href="#">Spanish</a></li>
+                        </ul>
+                      )}
+                    </li>
+                    <li
+                      className="account"
+                      onMouseEnter={() => toggleDropdown("account")}
+                      onMouseLeave={() => toggleDropdown("account")}
+                    >
+                      <a href="#">
+                        My Account
+                        <i className="fa fa-angle-down"></i>
+                      </a>
+                      {dropdownOpen.account && (
+                        <ul className="account_selection">
+                          <li>
+                            <Link to="login">
+                              <i className="fa fa-sign-in" aria-hidden="true"></i>Sign In
+                            </Link>
+                          </li>
+                          <li>
+                            <Link to="/register">
+                              <i className="fa fa-user-plus" aria-hidden="true"></i>Register
+                            </Link>
+                          </li>
+                        </ul>
+                      )}
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <nav
-        className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
-        id="ftco-navbar"
-      >
-        <div className="container">
-          <a className="navbar-brand" href="#">
-            Coryn Store
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#ftco-nav"
-            aria-controls="ftco-nav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="oi oi-menu"></span> Menu
-          </button>
-
-          <div className="collapse navbar-collapse" id="ftco-nav">
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item active">
-                <a href="index.html" className="nav-link">
-                  Home
-                </a>
-              </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  id="dropdown04"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Catalog
-                </a>
-                <div className="dropdown-menu" aria-labelledby="dropdown04">
-                  <a className="dropdown-item" href="shop.html">
-                    Shop
-                  </a>
-                  <a className="dropdown-item" href="product-single.html">
-                    Single Product
-                  </a>
-                  <a className="dropdown-item" href="cart.html">
-                    Cart
-                  </a>
-                  <a className="dropdown-item" href="checkout.html">
-                    Checkout
-                  </a>
+        <div className="main_nav_container">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-12 text-right">
+                <div className="logo_container">
+                 <Link to="/">
+                    coryn<span>store</span>
+                  </Link>
                 </div>
-              </li>
-              <li className="nav-item">
-                <a href="about.html" className="nav-link">
-                  About
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="blog.html" className="nav-link">
-                  Blog
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="contact.html" className="nav-link">
-                  Contact
-                </a>
-              </li>
-              <li className="nav-item cta cta-colored">
-                <a href="cart.html" className="nav-link">
-                  <span className="icon-shopping_cart"></span>[0]
-                </a>
-              </li>
-            </ul>
+                <nav className="navbar">
+                  <ul className="navbar_menu">
+                    <li><Link to="/">home</Link></li>
+                    <li><Link to="/shop">shop</Link></li>
+                    <li><Link to="/promotion">promotion</Link></li>
+                    <li><Link to="/pages">pages</Link></li>
+                    <li><Link to="/blog">blog</Link></li>
+                    <li><Link to="/contact">contact</Link></li>
+                  </ul>
+                  <ul className="navbar_user">
+                    <li className="user-menu">
+                      <Link to="/login">
+                        <i className="fa fa-user" aria-hidden="true"></i>
+                        <span className="user-text">Đăng nhập</span>
+                      </Link>
+                    </li>
+                    <li className="checkout">
+                      <Link to="/cart">
+                        <i className="fa fa-shopping-cart" aria-hidden="true"></i>
+                        <span id="checkout_items" className="checkout_items">2</span>
+                      </Link>
+                    </li>
+                  </ul>
+                  <div className="hamburger_container" onClick={openMenu}>
+                    <i className="fa fa-bars" aria-hidden="true"></i>
+                  </div>
+                </nav>
+              </div>
+            </div>
           </div>
         </div>
-      </nav>
+      </header>
+
+      <div className="fs_menu_overlay" ref={fsOverlayRef} onClick={closeMenu}></div>
+      <div className="hamburger_menu" ref={menuRef}>
+        <div className="hamburger_close" onClick={closeMenu}>
+          <i className="fa fa-times" aria-hidden="true"></i>
+        </div>
+        <div className="hamburger_menu_content text-right">
+          <ul className="menu_top_nav">
+            <li className="menu_item has-children">
+              <a href="#">
+                usd
+                <i className="fa fa-angle-down"></i>
+              </a>
+              <ul className="menu_selection">
+                <li><a href="#">cad</a></li>
+                <li><a href="#">aud</a></li>
+                <li><a href="#">eur</a></li>
+                <li><a href="#">gbp</a></li>
+              </ul>
+            </li>
+            <li className="menu_item has-children">
+              <a href="#">
+                English
+                <i className="fa fa-angle-down"></i>
+              </a>
+              <ul className="menu_selection">
+                <li><a href="#">French</a></li>
+                <li><a href="#">Italian</a></li>
+                <li><a href="#">German</a></li>
+                <li><a href="#">Spanish</a></li>
+              </ul>
+            </li>
+            <li className="menu_item has-children">
+              <a href="#">
+                My Account
+                <i className="fa fa-angle-down"></i>
+              </a>
+              <ul className="menu_selection">
+                <li>
+                  <a href="#">
+                    <i className="fa fa-sign-in" aria-hidden="true"></i>Sign In
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i className="fa fa-user-plus" aria-hidden="true"></i>Register
+                  </a>
+                </li>
+              </ul>
+            </li>
+              <li className="menu_item"><Link to="/">home</Link></li>
+              <li className="menu_item"><Link to="/shop">shop</Link></li>
+              <li className="menu_item"><Link to="/promotion">promotion</Link></li>
+              <li className="menu_item"><Link to="/pages">pages</Link></li>
+              <li className="menu_item"><Link to="/blog">blog</Link></li>
+              <li className="menu_item"><Link to="/contact">contact</Link></li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
