@@ -28,7 +28,10 @@ root.render(
       <ScrollToTop>
         <Routes>
           <Route path="/" element={<App />} />
-          <Route path="/products" element={<Products />} />
+          <Route path="/products" element={<Products />}>
+          <Route path=":productId" element={<Products />}/>
+          </Route>
+           
         </Routes>
       </ScrollToTop>
     </BrowserRouter>

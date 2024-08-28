@@ -393,8 +393,18 @@ mark,
     content: "\2014\00A0"; }
 
 .img-fluid {
-  max-width: 100%;
+  width: 255px;
   height: 355px; }
+
+  .img-product-single{
+    padding: 0.25rem;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    height: 630px; 
+    width: 540px;
+
+  }
 
 .img-thumbnail {
   padding: 0.25rem;

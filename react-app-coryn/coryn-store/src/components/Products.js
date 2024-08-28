@@ -1,21 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import productsApi from "../api/productsApi";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 
 export default function Products() {
+  const params = useParams();
+  const [product, setProduct] = useState([null]);
   const [products, setProducts] = useState([]);
   useEffect(() => {
+    fetchProductId();
     fetchProducts();
-  }, []);
+  }, [params.productId]); 
+  const fetchProductId = async () =>{
+    const product = await productsApi.getProductById(parseInt(params.productId,10));
+    setProduct(product.data);
+    console.log(product.data);
+    };
   const fetchProducts = async () => {
     try {
       const productsList = await productsApi.getAll();
       setProducts(productsList.data);
       console.log(productsList.data);
     } catch (err) {
-      console.log("Error");
+      console.error("Error fetching products:", err);
     }
   };
   return (
@@ -27,18 +35,18 @@ export default function Products() {
             <div className="row">
               <div className="col-lg-6 mb-5 ">
                 <a
-                  href="images/product_1.png"
+                  href={`/images/${product.imageProduct}`}
                   className="image-popup prod-img-bg"
                 >
                   <img
-                    src="images/product_1.png"
-                    className="img-fluid"
+                    src={`/images/${product.imageProduct}`}
+                    className="img-product-single"
                     alt="Colorlib Template"
                   />
                 </a>
               </div>
               <div className="col-lg-6 product-details pl-md-5 ">
-                <h3>Nike Free RN 2019 iD</h3>
+                <h3>{product.name}</h3>
                 <div className="rating d-flex">
                   <p className="text-left mr-4">
                     <a href="#" className="mr-2">
@@ -72,12 +80,10 @@ export default function Products() {
                   </p>
                 </div>
                 <p className="price">
-                  <span>$120.00</span>
+                  <span>{product.price-(product.price*(1-product.discount/100))}</span>
                 </p>
                 <p>
-                  A small river named Duden flows by their place and supplies it
-                  with the necessary regelialia. It is a paradisematic country,
-                  in which roasted parts of sentences fly into your mouth.
+                  {product.description }
                 </p>
                 <p>On her way she met a copy...</p>
                 <div className="row mt-4">
@@ -289,15 +295,15 @@ export default function Products() {
                 return (
                   <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
                     <div className="product d-flex flex-column">
-                      <a href="#" className="img-prod">
-                        <img
-                          className="img-fluid"
-                          src={`images/${product.imageProduct}`}
-                          alt="Colorlib Template"
-                        />
-                        <span className="status">{product.discount}% Off</span>
-                        <div className="overlay"></div>
-                      </a>
+                    <Link to={`/products/${product.id}`} className="img-prod">
+                      <img
+                        className="img-fluid"
+                        src={`/images/${product.imageProduct}`}
+                        alt="Product Image"
+                      />
+                      <span className="status">{product.discount}% Off</span>
+                      <div className="overlay"></div>
+                    </Link>
                       <div className="text py-3 pb-4 px-3">
                         <div className="d-flex">
                           <div className="cat">
@@ -359,67 +365,9 @@ export default function Products() {
                   </div>
                 );
               })}
-              <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
-                <div className="product d-flex flex-column">
-                  <a href="#" className="img-prod">
-                    <img
-                      className="img-fluid"
-                      src="images/shoes-1.png"
-                      alt="Colorlib Template"
-                    />
-                    <span className="status">10% Off</span>
-                    <div className="overlay"></div>
-                  </a>
-                  <div className="text py-3 pb-4 px-3">
-                    <div className="d-flex">
-                      <div className="cat">
-                        <span>Lifestyle</span>
-                      </div>
-                      <div className="rating">
-                        <p className="text-right mb-0">
-                          <a href="#">
-                            <span className="ion-ios-star-outline"></span>
-                          </a>
-                          <a href="#">
-                            <span className="ion-ios-star-outline"></span>
-                          </a>
-                          <a href="#">
-                            <span className="ion-ios-star-outline"></span>
-                          </a>
-                          <a href="#">
-                            <span className="ion-ios-star-outline"></span>
-                          </a>
-                          <a href="#">
-                            <span className="ion-ios-star-outline"></span>
-                          </a>
-                        </p>
-                      </div>
-                    </div>
-                    <h3>
-                      <a href="#">Produts1</a>
-                    </h3>
-                    <div className="pricing">
-                      <p className="price">
-                        <span className="mr-2 price-dc">120000VND</span>
-                        <span className="price-sale">2300000VND</span>
-                      </p>
-                    </div>
-                    <p className="bottom-area d-flex px-3">
-                      <a href="#" className="add-to-cart text-center py-2 mr-1">
-                        <span>
-                          Add to cart <i className="ion-ios-add ml-1"></i>
-                        </span>
-                      </a>
-                      <a href="#" className="buy-now text-center py-2">
-                        Buy now
-                        <span>
-                          <i className="ion-ios-cart ml-1"></i>
-                        </span>
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </div>
+              
+               
+              
             </div>
           </div>
         </section>

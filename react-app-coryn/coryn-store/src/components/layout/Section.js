@@ -109,7 +109,7 @@ export default function Section() {
               return (
                 <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
                   <div className="product d-flex flex-column">
-                    <Link to="/products" className="img-prod">
+                    <Link to={`/products/${product.id}`} className="img-prod">
                       <img
                         className="img-fluid"
                         src={`images/${product.imageProduct}`}

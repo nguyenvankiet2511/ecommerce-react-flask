@@ -1,10 +1,10 @@
-import axios from 'axios'
-const axiosClient = axios.create({
-    baseURL:'http://127.0.0.1:5000',
-    headers :{
-        'Content-Tyle':'application/json',
-    },
+import axios from 'axios';
 
+const axiosClient = axios.create({
+  baseURL: 'http://127.0.0.1:5000', // Đảm bảo URL cơ sở đúng với địa chỉ API của bạn
+  headers: {
+    'Content-Type': 'application/json', // Sửa 'Content-Tyle' thành 'Content-Type'
+  },
 });
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {

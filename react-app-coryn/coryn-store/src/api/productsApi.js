@@ -7,7 +7,7 @@ const productsApi={
 
 
     },
-    get(id){
+    getProductById(id){
         const url= `/products/${id}`;
         return axiosClient.get(url)
 
