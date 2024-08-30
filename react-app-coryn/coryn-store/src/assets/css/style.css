@@ -8438,7 +8438,7 @@ h1, h2, h3, h4, h5,
   position: absolute;
   left: 0;
   right: 0;
-  top: -30px;
+  top: -90px;
   z-index: 99; }
 
 .mouse-icon {
@@ -10754,4 +10754,71 @@ textarea.form-control {
     .fill_height
 {
 	height: 100%;
+}
+.cour-pad{
+  padding-top: 45px !important;
+  padding-bottom: 45px !important;
+}
+.carousel-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 2px solid #ddd; /* Thêm viền cho container */
+  border-radius: 10px;    /* Tùy chọn: Bo góc viền */
+}
+
+.carousel-testimony {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.item {
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+.testimony-wrap {
+  border: 1px solid #ddd;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.user-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-size: cover;
+  margin: 0 auto;
+  position: relative;
+}
+
+.quote {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: #fff;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.position {
+  font-size: 14px;
+  color: #666;
+}
+
+@keyframes slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
 }
