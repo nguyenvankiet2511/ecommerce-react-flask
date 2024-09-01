@@ -6,6 +6,8 @@ from datetime import datetime
 product_schema = ProductsSchema()
 products_schema = ProductsSchema(many=True)
 
+
+
 def get_all_products():
     products= Products.query.all()
     return  products_schema.jsonify(products)

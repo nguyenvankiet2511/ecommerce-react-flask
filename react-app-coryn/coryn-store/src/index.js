@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import Shop from "./components/Shop";
+import Login from "./components/Login";
 import reportWebVitals from "./reportWebVitals";
 import "./assets/css/style.css";
 import "./assets/css/header.css";
@@ -17,9 +18,11 @@ import "./assets/css/bootstrap-datepicker.css";
 import "./assets/css/jquery.timepicker.css";
 import "./assets/css/flaticon.css";
 import "./assets/css/icomoon.css";
+import "./assets/css/login.css"
 
 import Products from "./components/Products";
 import ScrollToTop from "./components/layout/ScrollToTop";
+import Register from "./components/Register";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -27,7 +30,7 @@ root.render(
     <BrowserRouter>
       <ScrollToTop>
         <Routes>
-          <Route path="/" element={<App />} />
+          <Route path="/" element={<Register />} />
           <Route path="/products" element={<Products />}>
             <Route path=":productId" element={<Products />} />
           </Route>
