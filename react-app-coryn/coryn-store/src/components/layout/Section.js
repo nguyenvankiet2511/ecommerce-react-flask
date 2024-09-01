@@ -1,4 +1,4 @@
-import React, { useEffect, useState ,useRef} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import productsApi from "../../api/productsApi";
 import axios from "axios";
@@ -8,15 +8,26 @@ export default function Section() {
   const carouselRef = useRef(null);
   const totalItems = 5; // số lượng items trong carousel
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   //Gọi API products
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
   const fetchProducts = async () => {
     try {
       const productsList = await productsApi.getAll();
-      setProducts(productsList.data);
+      setProducts(productsList.data.slice(0, 8));
       console.log(productsList.data);
+    } catch (err) {
+      console.log("Error");
+    }
+  };
+  const fetchCategories = async () => {
+    try {
+      const categoryList = await categoriesApi.getAll();
+      setCategories(categoryList.data);
+      console.log(categoryList.data);
     } catch (err) {
       console.log("Error");
     }
@@ -32,7 +43,9 @@ export default function Section() {
 
   useEffect(() => {
     if (carouselRef.current) {
-      carouselRef.current.style.transform = `translateX(-${currentIndex * 100}%)`;
+      carouselRef.current.style.transform = `translateX(-${
+        currentIndex * 100
+      }%)`;
     }
   }, [currentIndex]);
   return (
@@ -56,7 +69,6 @@ export default function Section() {
             </div>
           </div>
         </div>
-        
       </section>
       <section>
         <div className="container">
@@ -105,6 +117,43 @@ export default function Section() {
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div className="trending">
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-md-8 offset-md-2">
+                <div className="title">
+                  <h2>
+                    Trending <strong class="black">Categories</strong>
+                  </h2>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              {categories.map((category) => {
+                return (
+                  <div
+                    className="col-xl-4 col-lg-4 col-md-4 col-sm-12 margitop"
+                    key={category.id}
+                  >
+                    <Link to={`/category/${category.id}`}>
+                      <div className="trending-box">
+                        <figure>
+                          <img
+                            src={`images/${category.photoCategory}`}
+                            alt={category.name}
+                          />
+                        </figure>
+                        <h3>{category.name}</h3>
+                      </div>
+                    </Link>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -399,112 +448,133 @@ export default function Section() {
               </div>
             </div>
             <div className="col-lg-7">
-      <div className="heading-section mb-5">
-        <h2 className="mb-4">Our satisfied customer says</h2>
-        <p>
-          Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in
-        </p>
-      </div>
-      <div className="carousel-container">
-       
-        <div className="carousel-testimony" ref={carouselRef}>
-          <div className="item">
-            <div className="testimony-wrap">
-              <div
-                className="user-img mb-4"
-                style={{ backgroundImage: `url('/images/person_1.jpg')` }}
-              >
-                <span className="quote d-flex align-items-center justify-content-center">
-                  <i className="icon-quote-left"></i>
-                </span>
-              </div>
-              <div className="text">
-                <p className="mb-4 pl-4 line">
-                  Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.
+              <div className="heading-section mb-5">
+                <h2 className="mb-4">Our satisfied customer says</h2>
+                <p>
+                  Far far away, behind the word mountains, far from the
+                  countries Vokalia and Consonantia, there live the blind texts.
+                  Separated they live in
                 </p>
-                <p className="name">Garreth Smith</p>
-                <span className="position">Marketing Manager</span>
               </div>
-            </div>
-          </div>
-          <div className="item">
-            <div className="testimony-wrap">
-              <div
-                className="user-img mb-4"
-                style={{ backgroundImage: `url('/images/person_2.jpg')` }}
-              >
-                <span className="quote d-flex align-items-center justify-content-center">
-                  <i className="icon-quote-left"></i>
-                </span>
+              <div className="carousel-container">
+                <div className="carousel-testimony" ref={carouselRef}>
+                  <div className="item">
+                    <div className="testimony-wrap">
+                      <div
+                        className="user-img mb-4"
+                        style={{
+                          backgroundImage: `url('/images/person_1.jpg')`,
+                        }}
+                      >
+                        <span className="quote d-flex align-items-center justify-content-center">
+                          <i className="icon-quote-left"></i>
+                        </span>
+                      </div>
+                      <div className="text">
+                        <p className="mb-4 pl-4 line">
+                          Far far away, behind the word mountains, far from the
+                          countries Vokalia and Consonantia, there live the
+                          blind texts.
+                        </p>
+                        <p className="name">Garreth Smith</p>
+                        <span className="position">Marketing Manager</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="item">
+                    <div className="testimony-wrap">
+                      <div
+                        className="user-img mb-4"
+                        style={{
+                          backgroundImage: `url('/images/person_2.jpg')`,
+                        }}
+                      >
+                        <span className="quote d-flex align-items-center justify-content-center">
+                          <i className="icon-quote-left"></i>
+                        </span>
+                      </div>
+                      <div className="text">
+                        <p className="mb-4 pl-4 line">
+                          Far far away, behind the word mountains, far from the
+                          countries Vokalia and Consonantia, there live the
+                          blind texts.
+                        </p>
+                        <p className="name">Garreth Smith</p>
+                        <span className="position">Interface Designer</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="item">
+                    <div className="testimony-wrap">
+                      <div
+                        className="user-img mb-4"
+                        style={{
+                          backgroundImage: `url('/images/person_3.jpg')`,
+                        }}
+                      >
+                        <span className="quote d-flex align-items-center justify-content-center">
+                          <i className="icon-quote-left"></i>
+                        </span>
+                      </div>
+                      <div className="text">
+                        <p className="mb-4 pl-4 line">
+                          Far far away, behind the word mountains, far from the
+                          countries Vokalia and Consonantia, there live the
+                          blind texts.
+                        </p>
+                        <p className="name">Garreth Smith</p>
+                        <span className="position">UI Designer</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="item">
+                    <div className="testimony-wrap">
+                      <div
+                        className="user-img mb-4"
+                        style={{
+                          backgroundImage: `url('/images/person_1.jpg')`,
+                        }}
+                      >
+                        <span className="quote d-flex align-items-center justify-content-center">
+                          <i className="icon-quote-left"></i>
+                        </span>
+                      </div>
+                      <div className="text">
+                        <p className="mb-4 pl-4 line">
+                          Far far away, behind the word mountains, far from the
+                          countries Vokalia and Consonantia, there live the
+                          blind texts.
+                        </p>
+                        <p className="name">Garreth Smith</p>
+                        <span className="position">Web Developer</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="item">
+                    <div className="testimony-wrap">
+                      <div
+                        className="user-img mb-4"
+                        style={{
+                          backgroundImage: `url('/images/person_1.jpg')`,
+                        }}
+                      >
+                        <span className="quote d-flex align-items-center justify-content-center">
+                          <i className="icon-quote-left"></i>
+                        </span>
+                      </div>
+                      <div className="text">
+                        <p className="mb-4 pl-4 line">
+                          Far far away, behind the word mountains, far from the
+                          countries Vokalia and Consonantia, there live the
+                          blind texts.
+                        </p>
+                        <p className="name">Garreth Smith</p>
+                        <span className="position">System Analyst</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="text">
-                <p className="mb-4 pl-4 line">
-                  Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.
-                </p>
-                <p className="name">Garreth Smith</p>
-                <span className="position">Interface Designer</span>
-              </div>
-            </div>
-          </div>
-          <div className="item">
-            <div className="testimony-wrap">
-              <div
-                className="user-img mb-4"
-                style={{ backgroundImage: `url('/images/person_3.jpg')` }}
-              >
-                <span className="quote d-flex align-items-center justify-content-center">
-                  <i className="icon-quote-left"></i>
-                </span>
-              </div>
-              <div className="text">
-                <p className="mb-4 pl-4 line">
-                  Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.
-                </p>
-                <p className="name">Garreth Smith</p>
-                <span className="position">UI Designer</span>
-              </div>
-            </div>
-          </div>
-          <div className="item">
-            <div className="testimony-wrap">
-              <div
-                className="user-img mb-4"
-                style={{ backgroundImage: `url('/images/person_1.jpg')` }}
-              >
-                <span className="quote d-flex align-items-center justify-content-center">
-                  <i className="icon-quote-left"></i>
-                </span>
-              </div>
-              <div className="text">
-                <p className="mb-4 pl-4 line">
-                  Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.
-                </p>
-                <p className="name">Garreth Smith</p>
-                <span className="position">Web Developer</span>
-              </div>
-            </div>
-          </div>
-          <div className="item">
-            <div className="testimony-wrap">
-              <div
-                className="user-img mb-4"
-                style={{ backgroundImage: `url('/images/person_1.jpg')` }}
-              >
-                <span className="quote d-flex align-items-center justify-content-center">
-                  <i className="icon-quote-left"></i>
-                </span>
-              </div>
-              <div className="text">
-                <p className="mb-4 pl-4 line">
-                  Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.
-                </p>
-                <p className="name">Garreth Smith</p>
-                <span className="position">System Analyst</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
             </div>
           </div>
         </div>

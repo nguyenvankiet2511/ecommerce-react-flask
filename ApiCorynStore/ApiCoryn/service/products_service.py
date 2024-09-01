@@ -7,11 +7,15 @@ product_schema = ProductsSchema()
 products_schema = ProductsSchema(many=True)
 
 def get_all_products():
-    products= Products.query.limit(8).all()
+    products= Products.query.all()
     return  products_schema.jsonify(products)
 def get_product(id):
     product= Products.query.get(id)
     return product_schema.jsonify(product)
+def get_products_by_categoryId( categoryId):
+    products = Products.query.filter_by(category_id=categoryId).all()
+    return products_schema.jsonify((products))
+
 def get_product_by_name(name):
     products = Products.query.filter(Products.name.contains(name)) # Tìm kiếm sản phẩm theo tên
     return products_schema.jsonify(products)  # Trả về danh sách các sản phẩm tìm được

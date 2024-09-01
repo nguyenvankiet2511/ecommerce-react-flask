@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App";
+import Shop from "./components/Shop";
 import reportWebVitals from "./reportWebVitals";
 import "./assets/css/style.css";
 import "./assets/css/header.css";
@@ -17,7 +18,6 @@ import "./assets/css/jquery.timepicker.css";
 import "./assets/css/flaticon.css";
 import "./assets/css/icomoon.css";
 
-
 import Products from "./components/Products";
 import ScrollToTop from "./components/layout/ScrollToTop";
 
@@ -29,9 +29,11 @@ root.render(
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/products" element={<Products />}>
-          <Route path=":productId" element={<Products />}/>
+            <Route path=":productId" element={<Products />} />
           </Route>
-           
+          <Route path="/category" element={<Shop />}>
+            <Route path=":categoryId" element={<Shop />} />
+          </Route>
         </Routes>
       </ScrollToTop>
     </BrowserRouter>

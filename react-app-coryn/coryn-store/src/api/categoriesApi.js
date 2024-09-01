@@ -12,6 +12,10 @@ const categoriesApi={
         return axiosClient.get(url)
 
     },
+    getProductsByCategoryId(id){
+        const url= `/categories/${id}`;
+        return axiosClient.get(url)
+    },
     add(data){
         const url= '/categories';
         return axiosClient.post(url, data)

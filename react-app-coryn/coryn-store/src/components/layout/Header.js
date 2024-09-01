@@ -152,7 +152,7 @@ export default function Header() {
                 <nav className="navbar">
                   <ul className="navbar_menu">
                     <li><Link to="/">home</Link></li>
-                    <li><Link to="/shop">shop</Link></li>
+                    <li><Link to={`/category/${-1}`}>shop</Link></li>
                     <li><Link to="/promotion">promotion</Link></li>
                     <li><Link to="/pages">pages</Link></li>
                     <li><Link to="/blog">blog</Link></li>
@@ -232,7 +232,7 @@ export default function Header() {
               </ul>
             </li>
               <li className="menu_item"><Link to="/">home</Link></li>
-              <li className="menu_item"><Link to="/shop">shop</Link></li>
+              <li className="menu_item"><Link to={`/category/${-1}`}>shop</Link></li>
               <li className="menu_item"><Link to="/promotion">promotion</Link></li>
               <li className="menu_item"><Link to="/pages">pages</Link></li>
               <li className="menu_item"><Link to="/blog">blog</Link></li>

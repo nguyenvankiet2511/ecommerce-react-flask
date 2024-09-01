@@ -12,6 +12,9 @@ def load_login():
 @app.route("/categories", methods=['GET'])
 def view_category():
     return categories_service.get_all_categories()
+@app.route("/categories/<categoryId>", methods= ['GET'])
+def view_product_by_categoryId(categoryId):
+    return products_service.get_products_by_categoryId(categoryId)
 @app.route("/categories/delete/<category_id>", methods=['DELETE'])
 def delete_category(category_id):
     return categories_service.delete_category(category_id)
