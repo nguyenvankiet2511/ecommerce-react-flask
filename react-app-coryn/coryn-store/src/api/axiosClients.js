@@ -1,11 +1,12 @@
 import axios from 'axios';
-
 const axiosClient = axios.create({
-  baseURL: 'http://127.0.0.1:5000', // Đảm bảo URL cơ sở đúng với địa chỉ API của bạn
+  baseURL: 'http://localhost:5001', // Địa chỉ API của bạn
+  withCredentials: true, // Cho phép gửi cookie phiên cùng với yêu cầu
   headers: {
-    'Content-Type': 'application/json', // Sửa 'Content-Tyle' thành 'Content-Type'
+    'Content-Type': 'application/json', // Định dạng nội dung là JSON
   },
 });
+
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
     // Do something before request is sent

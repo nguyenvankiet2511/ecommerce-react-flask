@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import accountsApi from "../../api/accountsApi";
+import {isLoggedIn, deleteTokens}  from "../../api/authToken"; 
+import axios from 'axios';
 
 export default function Header() {
-  
+  const checkLoggedIn = isLoggedIn();
+  const userId= localStorage.getItem('user_id');
   const [menuActive, setMenuActive] = useState(false);
+  const [curentUser, setCurrentUser] = useState([null]);
   const [dropdownOpen, setDropdownOpen] = useState({
     currency: false,
     language: false,
@@ -14,6 +19,9 @@ export default function Header() {
   const topNavRef = useRef(null);
   const menuRef = useRef(null);
   const fsOverlayRef = useRef(null);
+  const location = useLocation();
+  const userData = location.state;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => setHeader();
@@ -27,6 +35,31 @@ export default function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [menuActive]);
+
+
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const user = await accountsApi.getCurentUser();
+      setCurrentUser(user.data.logged_in_as);
+      console.log('User Data:', user.data.logged_in_as);
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      deleteTokens();
+      console.log("User logged out");
+      navigate("/");
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
 
   const setHeader = () => {
     const header = headerRef.current;
@@ -52,14 +85,12 @@ export default function Header() {
     fsOverlayRef.current.style.pointerEvents = "none";
     setMenuActive(false);
   };
-  
 
   const toggleDropdown = (dropdown) => {
     setDropdownOpen((prev) => ({
       ...prev,
       [dropdown]: !prev[dropdown],
     }));
-  
   };
 
   return (
@@ -69,7 +100,9 @@ export default function Header() {
           <div className="container">
             <div className="row">
               <div className="col-md-6">
-                <div className="top_nav_left">Free shipping on all orders over $50</div>
+                <div className="top_nav_left">
+                  Free shipping on all orders over $50
+                </div>
               </div>
               <div className="col-md-6 text-right">
                 <div className="top_nav_right">
@@ -85,10 +118,18 @@ export default function Header() {
                       </a>
                       {dropdownOpen.currency && (
                         <ul className="currency_selection">
-                          <li><a href="#">cad</a></li>
-                          <li><a href="#">aud</a></li>
-                          <li><a href="#">eur</a></li>
-                          <li><a href="#">gbp</a></li>
+                          <li>
+                            <a href="#">cad</a>
+                          </li>
+                          <li>
+                            <a href="#">aud</a>
+                          </li>
+                          <li>
+                            <a href="#">eur</a>
+                          </li>
+                          <li>
+                            <a href="#">gbp</a>
+                          </li>
                         </ul>
                       )}
                     </li>
@@ -103,10 +144,18 @@ export default function Header() {
                       </a>
                       {dropdownOpen.language && (
                         <ul className="language_selection">
-                          <li><a href="#">French</a></li>
-                          <li><a href="#">Italian</a></li>
-                          <li><a href="#">German</a></li>
-                          <li><a href="#">Spanish</a></li>
+                          <li>
+                            <a href="#">French</a>
+                          </li>
+                          <li>
+                            <a href="#">Italian</a>
+                          </li>
+                          <li>
+                            <a href="#">German</a>
+                          </li>
+                          <li>
+                            <a href="#">Spanish</a>
+                          </li>
                         </ul>
                       )}
                     </li>
@@ -121,16 +170,49 @@ export default function Header() {
                       </a>
                       {dropdownOpen.account && (
                         <ul className="account_selection">
-                          <li>
-                            <Link to="login">
-                              <i className="fa fa-sign-in" aria-hidden="true"></i>Sign In
-                            </Link>
-                          </li>
-                          <li>
-                            <Link to="/register">
-                              <i className="fa fa-user-plus" aria-hidden="true"></i>Register
-                            </Link>
-                          </li>
+                          {checkLoggedIn ? (
+                            <>
+                              <li>
+                                <Link to="login">
+                                  <i
+                                    className="fa fa-user"
+                                    aria-hidden="true"
+                                  ></i>
+                                  Hồ sơ
+                                </Link>
+                              </li>
+                              <li>
+                                <a href="#" onClick={handleLogout}>
+                                  <i
+                                    className="fa fa-sign-out"
+                                    aria-hidden="true"
+                                  ></i>
+                                  Đăng xuất
+                                </a>
+                              </li>
+                            </>
+                          ) : (
+                            <>
+                              <li>
+                                <Link to="login">
+                                  <i
+                                    className="fa fa-sign-in"
+                                    aria-hidden="true"
+                                  ></i>
+                                  Đăng nhập
+                                </Link>
+                              </li>
+                              <li>
+                                <Link to="/register">
+                                  <i
+                                    className="fa fa-user-plus"
+                                    aria-hidden="true"
+                                  ></i>
+                                  Đăng ký
+                                </Link>
+                              </li>
+                            </>
+                          )}
                         </ul>
                       )}
                     </li>
@@ -145,30 +227,59 @@ export default function Header() {
             <div className="row">
               <div className="col-lg-12 text-right">
                 <div className="logo_container">
-                 <Link to="/">
+                  <Link to="/">
                     coryn<span>store</span>
                   </Link>
                 </div>
                 <nav className="navbar">
                   <ul className="navbar_menu">
-                    <li><Link to="/">home</Link></li>
-                    <li><Link to={`/category/${-1}`}>shop</Link></li>
-                    <li><Link to="/promotion">promotion</Link></li>
-                    <li><Link to="/pages">pages</Link></li>
-                    <li><Link to="/blog">blog</Link></li>
-                    <li><Link to="/contact">contact</Link></li>
+                    <li>
+                      <Link to="/">home</Link>
+                    </li>
+                    <li>
+                      <Link to={`/category/${-1}`}>shop</Link>
+                    </li>
+                    <li>
+                      <Link to="/promotion">promotion</Link>
+                    </li>
+                    <li>
+                      <Link to="/pages">pages</Link>
+                    </li>
+                    <li>
+                      <Link to="/blog">blog</Link>
+                    </li>
+                    <li>
+                      <Link to="/contact">contact</Link>
+                    </li>
                   </ul>
                   <ul className="navbar_user">
                     <li className="user-menu">
-                      <Link to="/login">
+                    {checkLoggedIn ? (
+                      <>
+                       <Link to="/profile">
+                        <i className="fa fa-user" aria-hidden="true"></i>
+                        <span className="user-text">{curentUser.name}</span>
+                      </Link>
+                      </>
+                    ) : (
+                      <>
+                       <Link to="/login">
                         <i className="fa fa-user" aria-hidden="true"></i>
                         <span className="user-text">Đăng nhập</span>
                       </Link>
+                      </>
+                    )}
+                     
                     </li>
                     <li className="checkout">
-                      <Link to="/cart">
-                        <i className="fa fa-shopping-cart" aria-hidden="true"></i>
-                        <span id="checkout_items" className="checkout_items">2</span>
+                    <Link to={`/cart/${userId}`}>
+                        <i
+                          className="fa fa-shopping-cart"
+                          aria-hidden="true"
+                        ></i>
+                        <span id="checkout_items" className="checkout_items">
+                          2
+                        </span>
                       </Link>
                     </li>
                   </ul>
@@ -182,7 +293,11 @@ export default function Header() {
         </div>
       </header>
 
-      <div className="fs_menu_overlay" ref={fsOverlayRef} onClick={closeMenu}></div>
+      <div
+        className="fs_menu_overlay"
+        ref={fsOverlayRef}
+        onClick={closeMenu}
+      ></div>
       <div className="hamburger_menu" ref={menuRef}>
         <div className="hamburger_close" onClick={closeMenu}>
           <i className="fa fa-times" aria-hidden="true"></i>
@@ -195,10 +310,18 @@ export default function Header() {
                 <i className="fa fa-angle-down"></i>
               </a>
               <ul className="menu_selection">
-                <li><a href="#">cad</a></li>
-                <li><a href="#">aud</a></li>
-                <li><a href="#">eur</a></li>
-                <li><a href="#">gbp</a></li>
+                <li>
+                  <a href="#">cad</a>
+                </li>
+                <li>
+                  <a href="#">aud</a>
+                </li>
+                <li>
+                  <a href="#">eur</a>
+                </li>
+                <li>
+                  <a href="#">gbp</a>
+                </li>
               </ul>
             </li>
             <li className="menu_item has-children">
@@ -207,36 +330,44 @@ export default function Header() {
                 <i className="fa fa-angle-down"></i>
               </a>
               <ul className="menu_selection">
-                <li><a href="#">French</a></li>
-                <li><a href="#">Italian</a></li>
-                <li><a href="#">German</a></li>
-                <li><a href="#">Spanish</a></li>
-              </ul>
-            </li>
-            <li className="menu_item has-children">
-              <a href="#">
-                My Account
-                <i className="fa fa-angle-down"></i>
-              </a>
-              <ul className="menu_selection">
                 <li>
-                  <a href="#">
-                    <i className="fa fa-sign-in" aria-hidden="true"></i>Sign In
-                  </a>
+                  <a href="#">French</a>
                 </li>
                 <li>
-                  <a href="#">
-                    <i className="fa fa-user-plus" aria-hidden="true"></i>Register
-                  </a>
+                  <a href="#">Italian</a>
+                </li>
+                <li>
+                  <a href="#">German</a>
+                </li>
+                <li>
+                  <a href="#">Spanish</a>
                 </li>
               </ul>
             </li>
-              <li className="menu_item"><Link to="/">home</Link></li>
-              <li className="menu_item"><Link to={`/category/${-1}`}>shop</Link></li>
-              <li className="menu_item"><Link to="/promotion">promotion</Link></li>
-              <li className="menu_item"><Link to="/pages">pages</Link></li>
-              <li className="menu_item"><Link to="/blog">blog</Link></li>
-              <li className="menu_item"><Link to="/contact">contact</Link></li>
+            <li className="menu_item">
+              <Link to="/login">
+                <i className="fa fa-user" aria-hidden="true"></i>
+                Đăng nhập
+              </Link>
+            </li>
+            <li className="menu_item">
+              <Link to="/register">
+                <i className="fa fa-user-plus" aria-hidden="true"></i>
+                Đăng ký
+              </Link>
+            </li>
+            <li className="menu_item">
+              <Link to={`/cart/${userId}`}>
+                <i className="fa fa-shopping-cart" aria-hidden="true"></i>
+                Giỏ hàng
+              </Link>
+            </li>
+            <li className="menu_item">
+              <Link to="/contact">
+                <i className="fa fa-envelope" aria-hidden="true"></i>
+                Liên hệ
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

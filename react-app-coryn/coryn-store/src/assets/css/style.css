@@ -49,7 +49,7 @@ html {
 article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   display: block; }
 
-body {
+body:not(.body-main) {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-size: 1rem;
@@ -7943,7 +7943,12 @@ button.bg-dark:focus {
   text-align: right !important; }
 
 .text-center {
-  text-align: center !important; }
+  text-align: center !important;
+  
+ }
+ .boder-cart{
+  border-bottom: 2px solid #000 !important; 
+ }
 
 @media (min-width: 576px) {
   .text-sm-left {
@@ -8122,7 +8127,7 @@ a.text-dark:hover, a.text-dark:focus {
     page-break-after: avoid; }
   @page {
     size: a3; }
-  body {
+  body:not(.body-main) {
     min-width: 992px !important; }
   .container {
     min-width: 992px !important; }
@@ -8149,7 +8154,7 @@ a.text-dark:hover, a.text-dark:focus {
     color: inherit;
     border-color: #dee2e6; } }
 
-body {
+body:not(.body-main) {
   font-family: "Open Sans", Arial, sans-serif;
   background: #fff;
   font-size: 15px;
@@ -9567,7 +9572,7 @@ textarea.form-control {
   font-size: 24px; }
 
 .ftco-section {
-  padding: 7em 0;
+  padding: 13.5em 0;
   position: relative; }
   @media (max-width: 767.98px) {
     .ftco-section {
@@ -10451,7 +10456,7 @@ textarea.form-control {
   margin-bottom: 40px;
   margin-top: 40px; }
   .sidebar-box-2 .heading {
-    font-size: 30px;
+    font-size: 28px;
     text-transform: uppercase; }
     .sidebar-box-2 .heading a {
       color: #000000; }

@@ -70,10 +70,10 @@ class ProductsSchema(ma.Schema):
 #     class Meta:
 #         fields = ('id', 'order_id', 'product_id', 'quantity', 'price', 'discount')
 #
-# # Schema cho Carts
-# class CartsSchema(ma.Schema):
-#     class Meta:
-#         fields = ('id', 'customer_id', 'product_id', 'quantity', 'price', 'discount')
+# Schema cho Carts
+class CartsSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'customer_id', 'product_id', 'quantity', 'price', 'discount')
 #
 # # Schema cho Messages
 # class MessagesSchema(ma.Schema):

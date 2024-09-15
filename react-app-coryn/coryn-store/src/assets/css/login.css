@@ -1,14 +1,22 @@
 
-body {
-    background-color: #171146;
+.body-main {
+    background-color: #171146 !important;
+    min-height: 150vh; /* Đảm bảo phần tử chiếm ít nhất chiều cao của cửa sổ trình duyệt */
+    width: 100%; /* Đảm bảo phần tử chiếm toàn bộ chiều rộng của màn hình */
+    position: relative; /* Để phần tử có thể được điều chỉnh */
+   
+    padding: 0; /* Xóa padding nếu có */
 }
 
-.main-from {
+
+
+
+.main-form {
     position: relative; /* Adjusted to position children elements correctly */
-    top: 250px;
+    top: 350px !important;
 }
 
-.background {
+.background-login {
     width: 430px;
     height: 520px;
     position: absolute;
@@ -17,7 +25,7 @@ body {
     top: 50%;
 }
 
-.background .shape {
+.background-login .shape-login {
     height: 200px;
     width: 200px;
     position: absolute;
@@ -25,14 +33,15 @@ body {
    /* Glowing effect around edges */
 }
 
-.shape:first-child {
+.shape-login:first-child {
     background: linear-gradient(#1845ad, #23a2f6);
     left: -80px;
     top: -80px;
     animation: glow-left 5s infinite linear; 
+   
 }
 
-.shape:last-child {
+.shape-login:last-child {
     background: linear-gradient(to right, #ff512f, #f09819);
     right: -30px;
     bottom: -80px;
@@ -116,6 +125,7 @@ body {
 
 
 .form-login{
+   
     height: 550px;
     width: 400px;
     background-color: rgba(255,255,255,0.13);
@@ -356,7 +366,7 @@ input.input-register:focus{
     100% { background-position: 200% 200%; }
 }
 
-.background .shape-register {
+.background-login .shape-register {
     height: 200px;
     width: 200px;
     position: absolute;

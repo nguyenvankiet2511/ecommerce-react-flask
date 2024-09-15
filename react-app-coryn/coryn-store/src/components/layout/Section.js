@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link,useLocation } from "react-router-dom";
 import productsApi from "../../api/productsApi";
 import axios from "axios";
 import categoriesApi from "../../api/categoriesApi";
@@ -9,6 +9,8 @@ export default function Section() {
   const totalItems = 5; // số lượng items trong carousel
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const location = useLocation();
+  const userData = location.state;
   //Gọi API products
   useEffect(() => {
     fetchProducts();
