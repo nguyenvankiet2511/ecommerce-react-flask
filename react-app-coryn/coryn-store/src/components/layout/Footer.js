@@ -1,136 +1,138 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 export default function Footer() {
   return (
     <div>
-      <footer class="ftco-footer ftco-section">
-        <div class="container">
-          <div class="row">
-            <div class="mouse">
-              <a href="#" class="mouse-icon">
-                <div class="mouse-wheel">
-                  <span class="ion-ios-arrow-up"></span>
+      <footer className="ftco-footer ftco-section">
+        <div className="container">
+          <div className="row">
+            <div className="mouse">
+              <a href="#" className="mouse-icon">
+                <div className="mouse-wheel">
+                  <span className="ion-ios-arrow-up"></span>
                 </div>
               </a>
             </div>
           </div>
-          <div class="row mb-5">
-            <div class="col-md">
-              <div class="ftco-footer-widget mb-4">
-                <h2 class="ftco-heading-2">Minishop</h2>
+          <div className="row mb-5">
+            <div className="col-md">
+              <div className="ftco-footer-widget mb-4">
+                <h2 className="ftco-heading-2">Coryn Store</h2>
                 <p>
-                  Far far away, behind the word mountains, far from the
-                  countries Vokalia and Consonantia.
+                  Khám phá phong cách của bạn với những thiết kế tinh tế, được
+                  tạo ra để làm nổi bật cá tính và phong cách riêng của bạn
                 </p>
-                <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
-                  <li class="ftco-animate">
+                <ul className="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                  <li className="">
                     <a href="#">
-                      <span class="icon-twitter"></span>
+                      <span className="icon-twitter"></span>
                     </a>
                   </li>
-                  <li class="ftco-animate">
+                  <li className="">
                     <a href="#">
-                      <span class="icon-facebook"></span>
+                      <span className="icon-facebook"></span>
                     </a>
                   </li>
-                  <li class="ftco-animate">
+                  <li className="">
                     <a href="#">
-                      <span class="icon-instagram"></span>
+                      <span className="icon-instagram"></span>
                     </a>
                   </li>
                 </ul>
               </div>
             </div>
-            <div class="col-md">
-              <div class="ftco-footer-widget mb-4 ml-md-5">
-                <h2 class="ftco-heading-2">Menu</h2>
-                <ul class="list-unstyled">
+            <div className="col-md">
+              <div className="ftco-footer-widget mb-4 ml-md-5">
+                <h2 className="ftco-heading-2">Menu</h2>
+                <ul className="list-unstyled">
                   <li>
-                    <a href="#" class="py-2 d-block">
+                    <Link to="/" className="py-2 d-block">
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/shop" className="py-2 d-block">
                       Shop
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" class="py-2 d-block">
-                      About
-                    </a>
+                    <Link to="/blog" className="py-2 d-block">
+                      Blog
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" class="py-2 d-block">
-                      Journal
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" class="py-2 d-block">
-                      Contact Us
-                    </a>
+                    <Link to="/contact" className="py-2 d-block">
+                      Contact
+                    </Link>
                   </li>
                 </ul>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="ftco-footer-widget mb-4">
-                <h2 class="ftco-heading-2">Help</h2>
-                <div class="d-flex">
-                  <ul class="list-unstyled mr-l-5 pr-l-3 mr-4">
+            <div className="col-md-4">
+              <div className="ftco-footer-widget mb-4">
+                <h2 className="ftco-heading-2">Help</h2>
+                <div className="d-flex">
+                  <ul className="list-unstyled mr-l-5 pr-l-3 mr-4">
                     <li>
-                      <a href="#" class="py-2 d-block">
-                        Shipping Information
+                      <a href="#" className="py-2 d-block">
+                        Thông tin vận chuyển
                       </a>
                     </li>
                     <li>
-                      <a href="#" class="py-2 d-block">
-                        Returns &amp; Exchange
+                      <a href="#" className="py-2 d-block">
+                        Đổi trả &amp; Ưa đãi
                       </a>
                     </li>
                     <li>
-                      <a href="#" class="py-2 d-block">
-                        Terms &amp; Conditions
+                      <a href="#" className="py-2 d-block">
+                        Tiện lợi &amp; Nhanh chóng
                       </a>
                     </li>
                     <li>
-                      <a href="#" class="py-2 d-block">
-                        Privacy Policy
+                      <a href="#" className="py-2 d-block">
+                        Chính sách bảo vệ
                       </a>
                     </li>
                   </ul>
-                  <ul class="list-unstyled">
+                  <ul className="list-unstyled">
                     <li>
-                      <a href="#" class="py-2 d-block">
+                      <a href="#" className="py-2 d-block">
                         FAQs
                       </a>
                     </li>
                     <li>
-                      <a href="#" class="py-2 d-block">
-                        Contact
+                      <a href="#" className="py-2 d-block">
+                        Hỗ trợ
                       </a>
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
-            <div class="col-md">
-              <div class="ftco-footer-widget mb-4">
-                <h2 class="ftco-heading-2">Have a Questions?</h2>
-                <div class="block-23 mb-3">
+            <div className="col-md">
+              <div className="ftco-footer-widget mb-4">
+                <h2 className="ftco-heading-2">Bạn có thắc mắc?</h2>
+                <div className="block-23 mb-3">
                   <ul>
                     <li>
-                      <span class="icon icon-map-marker"></span>
-                      <span class="text">
-                        203 Fake St. Mountain View, San Francisco, California,
-                        USA
+                      <span className="icon icon-map-marker"></span>
+                      <span className="text">
+                        74 TL 04, Thạch Lộc, Quận 12, Thành phố Hồ Chí
+                        Minh
                       </span>
                     </li>
                     <li>
                       <a href="#">
-                        <span class="icon icon-phone"></span>
-                        <span class="text">+2 392 3929 210</span>
+                        <span className="icon icon-phone"></span>
+                        <span className="text">+84 972614451</span>
                       </a>
                     </li>
                     <li>
                       <a href="#">
-                        <span class="icon icon-envelope"></span>
-                        <span class="text">info@yourdomain.com</span>
+                        <span className="icon icon-envelope"></span>
+                        <span className="text">
+                          nguyenvankiet25112003@gmail.com
+                        </span>
                       </a>
                     </li>
                   </ul>
@@ -138,15 +140,17 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-12 text-center">
+          <div className="row">
+            <div className="col-md-12 text-center">
               <p>
-                Copyright &copy;
-                <script>document.write(new Date().getFullYear());</script> All
-                rights reserved | This template is made with{" "}
-                <i class="icon-heart color-danger" aria-hidden="true"></i> by{" "}
-                <a href="https://colorlib.com" target="_blank">
-                  Colorlib
+                Đồ án ngành - Trường đại học Mở Thành phố Hồ Chí Minh - Sinh
+                viên thực hiện{" "}
+                <a href="https://colorlib.com" target="_blank" rel="noreferrer">
+                  Nguyễn Văn Kiệt
+                </a>{" "}
+                - Giảng viên hướng dẫn{" "}
+                <a href="https://colorlib.com" target="_blank" rel="noreferrer">
+                  ThS.Dương Hữu Thành
                 </a>
               </p>
             </div>

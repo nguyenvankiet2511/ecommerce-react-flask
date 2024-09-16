@@ -25,28 +25,39 @@ import Products from "./components/Products";
 import ScrollToTop from "./components/layout/ScrollToTop";
 import Register from "./components/Register";
 import Cart from "./components/Cart";
+import Blog from "./components/Blog";
+import Contact from "./components/Contact";
+import Checkout from "./components/Checkout";
+import About from "./components/About";
+import { CartProvider } from "./components/context/CartContext"; // Import CartProvider
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ScrollToTop>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/callback" element={<OAuthCallback />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/products" element={<Products />}>
-            <Route path=":productId" element={<Products />} />
-          </Route>
-          <Route path="/category" element={<Shop />}>
-            <Route path=":categoryId" element={<Shop />} />
-          </Route>
-          <Route path="/cart" element={<Cart />}>
-            <Route path=":userId" element={<Cart />} />
-          </Route>
-        </Routes>
-      </ScrollToTop>
+      <CartProvider> {/* Wrap the application with CartProvider */}
+        <ScrollToTop>
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/callback" element={<OAuthCallback />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/products" element={<Products />}>
+              <Route path=":productId" element={<Products />} />
+            </Route>
+            <Route path="/category" element={<Shop />}>
+              <Route path=":categoryId" element={<Shop />} />
+            </Route>
+            <Route path="/cart" element={<Cart />}>
+              <Route path=":userId" element={<Cart />} />
+            </Route>
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/checkout" element={<Checkout />} />
+          </Routes>
+        </ScrollToTop>
+      </CartProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

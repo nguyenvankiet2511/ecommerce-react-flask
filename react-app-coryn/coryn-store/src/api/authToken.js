@@ -22,6 +22,7 @@ export const isLoggedIn = () => {
       return response; // Trả về dữ liệu từ API
     } catch (error) {
       console.error('Error fetching protected data:', error);
+      deleteTokens();
       return null; // Trả về null nếu có lỗi
     }
   };

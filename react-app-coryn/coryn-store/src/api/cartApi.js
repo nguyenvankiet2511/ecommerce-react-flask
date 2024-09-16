@@ -12,8 +12,13 @@ const cartApi={
         return axiosClient.get(url)
 
     },
-    add(data){
-        const url= '/products';
+    getCountCartByUserId(user_id){
+        const url= `/cart_count/${user_id}`;
+        return axiosClient.get(url)
+
+    },
+    addCart(data){
+        const url= '/cart/add';
         return axiosClient.post(url, data)
 
     },
@@ -22,8 +27,8 @@ const cartApi={
         return axiosClient.patch(url, data)
 
     },
-    remove(id){
-        const url= `/products/${id}`;
+    removeCart(id){
+        const url= `/cart/remove/${id}`;
         return axiosClient.delete(url)
     }
 

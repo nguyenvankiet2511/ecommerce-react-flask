@@ -1,9 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link,useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import productsApi from "../../api/productsApi";
 import axios from "axios";
+import cartApi from "../../api/cartApi";
 import categoriesApi from "../../api/categoriesApi";
+import { useCart } from "../../components/context/CartContext";
 export default function Section() {
+  const { updateCartCount } = useCart();
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef(null);
   const totalItems = 5; // số lượng items trong carousel
@@ -34,6 +37,27 @@ export default function Section() {
       console.log("Error");
     }
   };
+  const addProductToCart = async (product) => {
+    try {
+      const data = {
+        product_id: product.id,
+        customer_id: localStorage.getItem('user_id'),
+        quantity: 1,
+      };
+      const response = await cartApi.addCart(data);
+      const count = await cartApi.getCountCartByUserId(localStorage.getItem('user_id'));
+        updateCartCount(count.data.cart_count);
+      if (response.status === 200) { // Check if the response status is OK
+        alert('Đã thêm sản phẩm vào giỏ hàng thành công!');
+      } else {
+        alert('Không thêm được sản phẩm vào giỏ hàng!');
+      }
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      alert('Failed to add product to cart.');
+    }
+  };
+  
   // chuyển thẻ đánh giá tự động
   useEffect(() => {
     const interval = setInterval(() => {
@@ -219,12 +243,12 @@ export default function Section() {
                       <div className="pricing">
                         <p className="price">
                           <span className="mr-2 price-dc">
-                            {product.price}VND
+                            {product.price}VNĐ
                           </span>
                           <span className="price-sale">
                             {product.price -
                               (product.price * product.discount) / 100}
-                            VND
+                            VNĐ
                           </span>
                         </p>
                       </div>
@@ -232,6 +256,10 @@ export default function Section() {
                         <a
                           href="#"
                           className="add-to-cart text-center py-2 mr-1"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            addProductToCart(product);
+                          }}
                         >
                           <span>
                             Add to cart <i className="ion-ios-add ml-1"></i>

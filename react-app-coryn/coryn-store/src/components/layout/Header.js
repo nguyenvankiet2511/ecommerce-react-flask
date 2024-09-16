@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import accountsApi from "../../api/accountsApi";
-import {isLoggedIn, deleteTokens}  from "../../api/authToken"; 
-import axios from 'axios';
+import cartApi from "../../api/cartApi";
+import { isLoggedIn, deleteTokens } from "../../api/authToken";
+import axios from "axios";
+import { useCart } from "../../components/context/CartContext";
 
 export default function Header() {
+  const { cartCount, updateCartCount } = useCart(0)|| {};
   const checkLoggedIn = isLoggedIn();
-  const userId= localStorage.getItem('user_id');
+  const userId = localStorage.getItem("user_id");
   const [menuActive, setMenuActive] = useState(false);
   const [curentUser, setCurrentUser] = useState([null]);
   const [dropdownOpen, setDropdownOpen] = useState({
@@ -35,8 +38,7 @@ export default function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [menuActive]);
-
-
+  //Lấy current user
   useEffect(() => {
     fetchCurrentUser();
   }, []);
@@ -45,11 +47,24 @@ export default function Header() {
     try {
       const user = await accountsApi.getCurentUser();
       setCurrentUser(user.data.logged_in_as);
-      console.log('User Data:', user.data.logged_in_as);
+      console.log("User Data:", user.data.logged_in_as);
     } catch (error) {
-      console.error('Error fetching current user:', error);
+      console.error("Error fetching current user:", error);
     }
   };
+  //Lấy sổ lượng sản phẩm trong giỏ hàng
+  useEffect(() => {
+    const fetchCountCart = async () => {
+      try {
+        const count = await cartApi.getCountCartByUserId(userId);
+        updateCartCount(count.data.cart_count); // Cập nhật số lượng giỏ hàng
+      } catch (error) {
+        console.error("Error fetching cart count:", error);
+      }
+    };
+
+    fetchCountCart();
+  }, [userId, updateCartCount]);
 
   const handleLogout = async () => {
     try {
@@ -57,7 +72,7 @@ export default function Header() {
       console.log("User logged out");
       navigate("/");
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error("Error during logout:", error);
     }
   };
 
@@ -101,7 +116,7 @@ export default function Header() {
             <div className="row">
               <div className="col-md-6">
                 <div className="top_nav_left">
-                  Free shipping on all orders over $50
+                  Miễn phí vận chuyển cho tất cả các đơn hàng trên 1,000,000 VNĐ
                 </div>
               </div>
               <div className="col-md-6 text-right">
@@ -165,7 +180,7 @@ export default function Header() {
                       onMouseLeave={() => toggleDropdown("account")}
                     >
                       <a href="#">
-                        My Account
+                        Tài khoản của tôi
                         <i className="fa fa-angle-down"></i>
                       </a>
                       {dropdownOpen.account && (
@@ -240,7 +255,7 @@ export default function Header() {
                       <Link to={`/category/${-1}`}>shop</Link>
                     </li>
                     <li>
-                      <Link to="/promotion">promotion</Link>
+                      <Link to="/about">about</Link>
                     </li>
                     <li>
                       <Link to="/pages">pages</Link>
@@ -254,31 +269,30 @@ export default function Header() {
                   </ul>
                   <ul className="navbar_user">
                     <li className="user-menu">
-                    {checkLoggedIn ? (
-                      <>
-                       <Link to="/profile">
-                        <i className="fa fa-user" aria-hidden="true"></i>
-                        <span className="user-text">{curentUser.name}</span>
-                      </Link>
-                      </>
-                    ) : (
-                      <>
-                       <Link to="/login">
-                        <i className="fa fa-user" aria-hidden="true"></i>
-                        <span className="user-text">Đăng nhập</span>
-                      </Link>
-                      </>
-                    )}
-                     
+                      {checkLoggedIn ? (
+                        <>
+                          <Link to="/profile">
+                            <i className="fa fa-user" aria-hidden="true"></i>
+                            <span className="user-text">{curentUser.name}</span>
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          <Link to="/login">
+                            <i className="fa fa-user" aria-hidden="true"></i>
+                            <span className="user-text">Đăng nhập</span>
+                          </Link>
+                        </>
+                      )}
                     </li>
                     <li className="checkout">
-                    <Link to={`/cart/${userId}`}>
+                      <Link to={`/cart`}>
                         <i
                           className="fa fa-shopping-cart"
                           aria-hidden="true"
                         ></i>
                         <span id="checkout_items" className="checkout_items">
-                          2
+                          {cartCount}
                         </span>
                       </Link>
                     </li>

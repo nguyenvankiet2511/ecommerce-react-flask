@@ -1,7 +1,7 @@
 from ApiCoryn import app, flow, db
 from flask_cors import cross_origin
 from ApiCoryn.service import users_service, categories_service, products_service, cart_service
-from ApiCoryn.model import UsersRole, Accounts, Users, Customers
+from ApiCoryn.model import UsersRole, Accounts, Users, Customers, Carts
 from flask import render_template, session, flash, jsonify, redirect, request, session
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
@@ -141,6 +141,47 @@ def view_product_by_name(name):
     return products_service.get_product_by_name(name)
 
 #API Cart------------------------------------------------------------------
+@app.route('/cart_count/<user_id>', methods=['GET'])
+def cart_count(user_id):
+    count = cart_service.get_count_cart(user_id)
+    return jsonify({'cart_count': count})
+
+
+
+@app.route('/cart/add', methods=['POST'])
+def add_cart():
+    try:
+        data = request.get_json()
+        product_id = data.get('product_id')
+        customer_id = data.get('customer_id')
+        quantity = data.get('quantity')
+        if not product_id or not customer_id or quantity is None:
+            return jsonify({"error": "Không đủ dữ liệu"}), 400
+        if quantity <= 0:
+            return jsonify({"error": "Số lượng nhỏ hơn 0"}), 400
+        cart_service.add_to_cart(customer_id, product_id, quantity)
+        return jsonify({"message": "Product added to cart successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+@app.route('/cart/update/<cart_id>', methods=['POST', 'GET'])
+def update_cart(cart_id):
+    data = request.get_json()
+    username = data.get('username')
+
+@app.route("/cart/remove/<id>", methods=['DELETE'])
+def remove_cart(id):
+    try:
+        cart_item = Carts.query.get(id)
+        if cart_item:
+            db.session.delete(cart_item)
+            db.session.commit()
+            return jsonify({"message": "Xóa sản phẩm thành công."}), 200
+        else:
+            return jsonify({"message": "Không thành công."}), 404
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return jsonify({"message": "An error occurred while removing the cart item."}), 500
 @app.route('/cart/<user_id>', methods=['GET'])
 def view_cart(user_id):
     if not user_id:
