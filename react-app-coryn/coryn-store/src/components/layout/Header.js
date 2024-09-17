@@ -9,6 +9,7 @@ import { useCart } from "../../components/context/CartContext";
 export default function Header() {
   const { cartCount, updateCartCount } = useCart(0)|| {};
   const checkLoggedIn = isLoggedIn();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const userId = localStorage.getItem("user_id");
   const [menuActive, setMenuActive] = useState(false);
   const [curentUser, setCurrentUser] = useState([null]);
@@ -50,6 +51,7 @@ export default function Header() {
       console.log("User Data:", user.data.logged_in_as);
     } catch (error) {
       console.error("Error fetching current user:", error);
+      deleteTokens();
     }
   };
   //Lấy sổ lượng sản phẩm trong giỏ hàng
@@ -108,6 +110,20 @@ export default function Header() {
     }));
   };
 
+  const handleCartClick = () => {
+    
+    if (checkLoggedIn) {
+      navigate('/cart');
+    } else {
+      // Hộp thoại xác nhận đăng nhập
+      const userConfirmed = window.confirm("Bạn cần đăng nhập để tiếp tục. Bạn có muốn đăng nhập không?");
+      
+      if (userConfirmed) {
+        navigate('/login'); // Điều hướng đến trang đăng nhập nếu người dùng chọn "OK"
+      }
+      // Nếu người dùng chọn "Cancel", không làm gì cả
+    }
+  };
   return (
     <div>
       <header className="header trans_300" ref={headerRef}>
@@ -286,7 +302,7 @@ export default function Header() {
                       )}
                     </li>
                     <li className="checkout">
-                      <Link to={`/cart`}>
+                      <a onClick={handleCartClick}>
                         <i
                           className="fa fa-shopping-cart"
                           aria-hidden="true"
@@ -294,7 +310,7 @@ export default function Header() {
                         <span id="checkout_items" className="checkout_items">
                           {cartCount}
                         </span>
-                      </Link>
+                      </a>
                     </li>
                   </ul>
                   <div className="hamburger_container" onClick={openMenu}>

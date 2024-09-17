@@ -1,7 +1,8 @@
 from ApiCoryn import app, flow, db
 from flask_cors import cross_origin
-from ApiCoryn.service import users_service, categories_service, products_service, cart_service
-from ApiCoryn.model import UsersRole, Accounts, Users, Customers, Carts
+from ApiCoryn.service import users_service, categories_service, products_service, cart_service, shipper_sevice, \
+    address_service, order_service
+from ApiCoryn.model import UsersRole, Accounts, Users, Customers, Carts, Orders, OrderDetails
 from flask import render_template, session, flash, jsonify, redirect, request, session
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
@@ -44,7 +45,7 @@ def auth_login():
         # Access attributes directly
         access_token = create_access_token(
             identity={"user_id": user.user_id, "name": user.name, "role": user.users_role_id.value})
-        return jsonify({"access_token": access_token, "user_id":user.user_id ,"message": "successful"})
+        return jsonify({"access_token": access_token, "user_id": user.user_id, "message": "successful"})
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
 
@@ -76,7 +77,8 @@ def oauth_callback():
             db.session.add(accountNew)
             db.session.commit()
             access_token = create_access_token(
-                identity={"user_id": accountNew.user_id, "name": accountNew.name, "role": accountNew.users_role_id.value})
+                identity={"user_id": accountNew.user_id, "name": accountNew.name,
+                          "role": accountNew.users_role_id.value})
             return jsonify({"access_token": access_token, "message": "successful"})
         else:
             access_token = create_access_token(
@@ -140,12 +142,12 @@ def view_product_by_name_and_price():
 def view_product_by_name(name):
     return products_service.get_product_by_name(name)
 
-#API Cart------------------------------------------------------------------
+
+# API Cart------------------------------------------------------------------
 @app.route('/cart_count/<user_id>', methods=['GET'])
 def cart_count(user_id):
     count = cart_service.get_count_cart(user_id)
     return jsonify({'cart_count': count})
-
 
 
 @app.route('/cart/add', methods=['POST'])
@@ -164,10 +166,25 @@ def add_cart():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-@app.route('/cart/update/<cart_id>', methods=['POST', 'GET'])
-def update_cart(cart_id):
-    data = request.get_json()
-    username = data.get('username')
+
+
+@app.route('/cart/update', methods=['POST'])
+def update_cart():
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No input data provided'}), 400
+        cart_id = data.get('cartId')
+        new_quantity = data.get('quantity')
+        if not cart_id or not isinstance(new_quantity, int) or new_quantity < 1:
+            return jsonify({'error': 'Dữ liệu không đủ'}), 400
+        cart_service.update_quantity_cart(cart_id, new_quantity)
+        return jsonify({'message': 'Cập nhật giỏ hàng thành công'}), 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error':'Lỗi cập nhật giỏ hàng'}), 500
+
+
 
 @app.route("/cart/remove/<id>", methods=['DELETE'])
 def remove_cart(id):
@@ -182,6 +199,8 @@ def remove_cart(id):
     except Exception as e:
         print(f"An error occurred: {e}")
         return jsonify({"message": "An error occurred while removing the cart item."}), 500
+
+
 @app.route('/cart/<user_id>', methods=['GET'])
 def view_cart(user_id):
     if not user_id:
@@ -191,6 +210,73 @@ def view_cart(user_id):
         return jsonify(products)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+# Order-------------------------------------------------------------
+@app.route("/order/create-order-customer", methods=['POST'])
+def create_order_customer():
+    try:
+        data = request.get_json()
+        customer_id = data.get('customer_id')
+        address_id = data.get('address_id')
+        shipper_id = data.get('shipper_id')
+        total = data.get('total')
+        payment_methods = data.get('paymentMethods')
+        l_product_id = data.get('l_productId')
+        l_quantity = data.get('l_quantity')
+        l_cart_id = data.get('l_cartId')
+
+        # Kiểm tra nếu thiếu dữ liệu cần thiết
+        if not all([customer_id, address_id, shipper_id, total, l_product_id, l_quantity, l_cart_id]):
+            return jsonify({"error": "Dữ liệu không đầy đủ"}), 400
+        order_service.create_order_customer(customer_id=customer_id, address_id=address_id, shipper_id=shipper_id,
+                                            total=total, paymentMethods=payment_methods, l_productId=l_product_id,
+                                            l_cartId=l_cart_id, l_quantity=l_quantity)
+        return jsonify({"message": "Đơn hàng đã được tạo thành công!"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+# Shipper------------------------------------------
+@app.route('/shipper', methods=['GET'])
+def view_shipper():
+    return shipper_sevice.get_all_shipper()
+
+
+@app.route('/shipper/<id>', methods=['GET'])
+def view_shipper_id(id):
+    return shipper_sevice.get_fee(id)
+
+
+# Address-----------------------------------------------------------------
+@app.route('/address/<customer_id>', methods=['GET'])
+def view_address(customer_id):
+    return address_service.get_all_address_by_id(customer_id)
+
+
+@app.route('/address/add', methods=['POST'])
+def add_address():
+    data = request.get_json()
+    name = data.get('name')
+    phone = data.get('phone')
+    address = data.get('address')
+    address_detail = data.get('addressDetail')
+    customer_id = data.get('customerId')
+    if not all([name, phone, address, customer_id]):
+        return jsonify({"error": "Thông tin không đầy đủ"}), 400
+    try:
+        address_service.create_address_new(
+            name=name,
+            phone=phone,
+            address=address,
+            address_detail=address_detail,
+            customer_id=customer_id
+        )
+        return jsonify({"message": "Tạo thành công"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(host='localhost', port=5001, debug=True)

@@ -5,19 +5,24 @@ from flask import jsonify
 
 def get_count_cart(user_id):
     return Carts.query.filter(Carts.customer_id == user_id).count()
+
+
 def add_to_cart(user_id, product_id, quantity):
-    cart= Carts(customer_id=user_id, product_id=product_id, quantity=quantity)
-    db.session.add(cart)
-    db.session.commit()
+    existing_cart_item = Carts.query.filter_by(customer_id=user_id, product_id=product_id).first()
+    if existing_cart_item:
+        existing_cart_item.quantity += quantity
+        db.session.commit()
+    else:
+        new_cart_item = Carts(customer_id=user_id, product_id=product_id, quantity=quantity)
+        db.session.add(new_cart_item)
+        db.session.commit()
 
 
 def update_quantity_cart(cart_id, new_quantity):
-    cart_item = Carts.query.get(cart_id)
+    cart_item = Carts.query.filter_by(id=cart_id).first()
     if cart_item:
         cart_item.quantity = new_quantity
         db.session.commit()
-    else:
-        raise ValueError("Cart item not found")
 
 
 def remove_product_to_cart(id):
@@ -31,6 +36,8 @@ def remove_product_to_cart(id):
         print(f"Sản phẩm với ID {id} đã được xóa khỏi giỏ hàng.")
     else:
         print(f"Sản phẩm với ID {id} không tồn tại trong giỏ hàng.")
+
+
 def get_products_to_cart(user_id):
     results = db.session.query(
         Products.id.label('product_id'),
@@ -42,8 +49,8 @@ def get_products_to_cart(user_id):
         Carts.quantity,
         Carts.id.label('cart_id')
     ).join(Carts, Products.id == Carts.product_id) \
-     .filter(Carts.customer_id == user_id) \
-     .all()
+        .filter(Carts.customer_id == user_id) \
+        .all()
     products_list = [
         {
             'product_id': result.product_id,
@@ -59,4 +66,3 @@ def get_products_to_cart(user_id):
     ]
 
     return products_list
-

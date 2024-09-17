@@ -30,10 +30,10 @@ class AccountsSchema(ma.Schema):
 #     class Meta:
 #         fields = ('id')
 #
-# # Schema cho BillingAddress
-# class BillingAddressSchema(ma.Schema):
-#     class Meta:
-#         fields = ('id', 'name', 'phone', 'address', 'addressDetail', 'customer_id')
+# Schema cho BillingAddress
+class BillingAddressSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'phone', 'address', 'addressDetail', 'customer_id')
 #
 # Schema cho Categories
 class CategoriesSchema(ma.Schema):
@@ -55,10 +55,10 @@ class ProductsSchema(ma.Schema):
 #     class Meta:
 #         fields = ('id', 'user_id', 'product_id', 'rating', 'comment')
 #
-# # Schema cho Shippers
-# class ShippersSchema(ma.Schema):
-#     class Meta:
-#         fields = ('id', 'companyName', 'phone')
+# Schema cho Shippers
+class ShippersSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'companyName', 'phone', 'fee')
 #
 # # Schema cho Orders
 # class OrdersSchema(ma.Schema):

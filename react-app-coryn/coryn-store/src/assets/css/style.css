@@ -10921,3 +10921,10 @@ textarea.form-control {
   font-weight: 500;
   color: #000404;
 }
+.margin-top-co{
+  margin-top: 50px !important;
+}
+.btn-co{
+  width: 250px;
+  size: 15px !important;
+}

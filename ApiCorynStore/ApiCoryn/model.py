@@ -2,7 +2,7 @@ import hashlib
 from ApiCoryn import db, app
 from enum import Enum as UserEnum
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Numeric, Text, Enum
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Numeric, Text, Enum, Double
 from sqlalchemy.orm import relationship, backref
 from datetime import datetime
 
@@ -95,10 +95,10 @@ class Products(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255))
-    price = Column(Numeric)
+    price = Column(Double, default=0)
     description = Column(Text)
     imageProduct = Column(String(255))
-    category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)  # Sửa lại tên bảng ở đây
+    category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
     unitsInStock = Column(Integer, default=0)
     discount = Column(Integer, default=0)
     createdDate = Column(DateTime)
@@ -133,6 +133,7 @@ class Shippers(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     companyName = Column(String(255), nullable=False)
     phone = Column(String(12))
+    fee = Column(Double, default=0)
 
     orders = relationship("Orders", backref="shipper")
 
@@ -142,13 +143,13 @@ class Orders(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     customer_id = Column(Integer, ForeignKey('Customers.id'), nullable=False)
-    employee_id = Column(Integer, ForeignKey('Employees.id'), nullable=False)
-    shipper_id = Column(Integer, ForeignKey('Shippers.id'), nullable=False)
+    employee_id = Column(Integer, ForeignKey('Employees.id'))
+    shipper_id = Column(Integer, ForeignKey('Shippers.id'))
     billingAddress_id = Column(Integer, ForeignKey('BillingAddress.id'), nullable=False)
     paymentMethods = Column(String(150), default="Thanh toán khi nhận hàng")
-    orderDate = Column(DateTime)
+    orderDate = Column(DateTime, default= datetime.now())
     active = Column(Boolean)
-    totalAmount = Column(Numeric)
+    totalAmount = Column(Double, default=0)
 
     order_details = relationship("OrderDetails", backref="order")
     order_returns = relationship("OrderReturn", backref="order")
@@ -161,7 +162,7 @@ class OrderDetails(db.Model):
     order_id = Column(Integer, ForeignKey('Orders.id'), nullable=False)
     product_id = Column(Integer, ForeignKey('Products.id'), nullable=False)
     quantity = Column(Integer)
-    price = Column(Numeric)
+    price = Column(Double, default=0)
     discount = Column(Integer, default=0)
 
 
@@ -172,7 +173,7 @@ class Carts(db.Model):
     customer_id = Column(Integer, ForeignKey('Customers.id'), nullable=False)
     product_id = Column(Integer, ForeignKey('Products.id'), nullable=False)
     quantity = Column(Integer)
-    price = Column(Numeric)
+    price = Column(Double, default=0)
     discount = Column(Integer)
 
 
@@ -273,6 +274,31 @@ if __name__ == '__main__':
             Categories(name='Phụ kiện thời trang', photoCategory='category-other.jpg')
         ]
         db.session.add_all(categories_data)
+        db.session.commit()
+
+        shipper_data = [
+            Shippers(companyName="Fast Delivery", phone="1234567890", fee=100000),
+            Shippers(companyName="Global Shippers", phone="0987654321", fee=35000),
+            Shippers(companyName="Express Logistics", phone="1231231234", fee=59000),
+            Shippers(companyName="Reliable Couriers", phone="9879879876", fee=120000),
+            Shippers(companyName="QuickShip", phone="5555555555", fee=70000),
+        ]
+        db.session.add_all(shipper_data)
+        db.session.commit()
+
+        address_data = [
+            BillingAddress(name='Nguyen Van A', phone='0912345678', address='123 ABC Street',
+                           addressDetail='Apartment 5A', customer_id=6),
+            BillingAddress(name='Tran Thi B', phone='0987654321', address='456 DEF Avenue',
+                           addressDetail='House 12', customer_id=6),
+            BillingAddress(name='Le Van C', phone='0923456789', address='789 GHI Road',
+                           addressDetail='Suite 3', customer_id=6),
+            BillingAddress(name='Pham Thi D', phone='0911123456', address='135 JKL Street',
+                           addressDetail='Villa 9', customer_id=6),
+            BillingAddress(name='Vu Thi E', phone='0933456789', address='246 MNO Boulevard',
+                           addressDetail='Flat 21B', customer_id=6)
+        ]
+        db.session.add_all(address_data)
         db.session.commit()
 
         # Products

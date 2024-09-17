@@ -1,6 +1,6 @@
 import axiosClient from "./axiosClients";
 
-const cartApi={
+const orderApi={
     getAll(params){
         const url= '/products';
         return axiosClient.get(url,{params})
@@ -17,14 +17,13 @@ const cartApi={
         return axiosClient.get(url)
 
     },
-    addCart(data){
-        const url= '/cart/add';
+    addOrderByCustomer(data){
+        const url= '/order/create-order-customer';
         return axiosClient.post(url, data)
-
     },
-    updateQuantityCart(data){
-        const url= `/cart/update`;
-        return axiosClient.post(url, data)
+    update(data){
+        const url= `/products/${data.id}`;
+        return axiosClient.patch(url, data)
 
     },
     removeCart(id){
@@ -33,4 +32,4 @@ const cartApi={
     }
 
 };
-export default cartApi;
+export default orderApi;
