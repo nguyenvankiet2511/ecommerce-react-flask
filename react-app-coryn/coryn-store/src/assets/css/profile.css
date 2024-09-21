@@ -153,3 +153,87 @@
 .btn-just-icon-pfe:hover i {
     color: #ffffff;
 }
+
+
+.success-container {
+    margin-top: 200px;
+    margin-bottom: 130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    font-family: 'Arial', sans-serif;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+}
+
+/* Phần thông báo thành công */
+.success-message {
+    text-align: center;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Hiệu ứng fade in cho phần thông báo */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Icon thành công */
+.icon-container {
+    font-size: 60px;
+    color: #28a745;
+    margin-bottom: 20px;
+    animation: bounceIn 0.6s ease-out;
+}
+
+/* Hiệu ứng bounce cho icon */
+@keyframes bounceIn {
+    0%, 100% { transform: scale(0.8); }
+    50% { transform: scale(1.2); }
+}
+
+/* Tiêu đề chính */
+h1 {
+    color: #28a745;
+    margin-bottom: 10px;
+}
+
+/* Đoạn văn bản */
+p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Phần chứa các nút điều hướng */
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+/* Các nút điều hướng */
+.btn-susscess{
+    display: inline-block;
+    padding: 10px 20px;
+    color: white;
+    background-color: #28a745;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+/* Hiệu ứng khi hover nút */
+.btn-susscess:hover {
+    color: #fff;
+    background-color: #218838;
+}

@@ -21,6 +21,7 @@ import "./assets/css/flaticon.css";
 import "./assets/css/icomoon.css";
 import "./assets/css/login.css";
 import "./assets/css/profile.css";
+import "./assets/css/style-employee.css";
 
 import Products from "./components/Products";
 import ScrollToTop from "./components/layout/ScrollToTop";
@@ -32,12 +33,20 @@ import Checkout from "./components/Checkout";
 import About from "./components/About";
 import { CartProvider } from "./components/context/CartContext"; // Import CartProvider
 import Profile from "./components/Profile";
+import SucessfulCheckout from "./components/SucessfulCheckout";
+import HeaderEmployee from "./components/layout/HeaderEmployee";
+import HomeEmployee from "./components/employee/HomeEmployee";
+import ProfileEmployee from "./components/employee/ProfileEmployee";
+import OrderManager from "./components/employee/OrderManager";
+import Payment from "./components/employee/Payment";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <CartProvider> {/* Wrap the application with CartProvider */}
+      <CartProvider>
+        {" "}
+        {/* Wrap the application with CartProvider */}
         <ScrollToTop>
           <Routes>
             <Route path="/" element={<App />} />
@@ -58,6 +67,11 @@ root.render(
             <Route path="/about" element={<About />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/sucessful-checkout" element={<SucessfulCheckout />} />
+            <Route path="/employee" element={<HomeEmployee />} />
+            <Route path="/employee/profile" element={<ProfileEmployee />} />
+            <Route path="/employee/order-manager" element={<OrderManager />} />
+            <Route path="/employee/payment" element={<Payment />} />
           </Routes>
         </ScrollToTop>
       </CartProvider>

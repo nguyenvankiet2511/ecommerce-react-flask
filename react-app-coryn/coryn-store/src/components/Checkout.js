@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation , useNavigate} from "react-router-dom";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import { CartProvider } from "./context/CartContext";
@@ -7,6 +7,7 @@ import addressApi from "../api/addressApi";
 import orderApi from "../api/orderApi";
 
 export default function Checkout() {
+  const navigate = useNavigate()
   const location = useLocation();
   const {
     totalAmount = 0,
@@ -178,7 +179,8 @@ export default function Checkout() {
       const response = await orderApi.addOrderByCustomer(data);
   
       if (response.status === 200) { 
-        alert('Đã đặt hàng thành công!');
+        navigate("/sucessful-checkout")
+        
       } else {
         alert('Đặt hàng không thành công!');
       }
