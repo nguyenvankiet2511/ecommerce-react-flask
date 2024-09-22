@@ -1,8 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FooterEmployee from "../layout/FooterEmployee";
 import HeaderEmployee from "../layout/HeaderEmployee";
+import orderApi from "../../api/orderApi";
+import { Link } from "react-router-dom";
 
 export default function OrderManager() {
+  const [orderDefault, setOrderDefault] = useState([]);
+  const [orderComfirm, setOrderComfirm] = useState([]);
+
+  useEffect(() => {
+    fetchOrderComfirm();
+    fetchOrderDefault();
+  }, []);
+
+  const fetchOrderDefault = async () => {
+    const orders = await orderApi.getOrderDefault();
+    setOrderDefault(orders.data);
+    console.log(orders.data);
+  };
+
+  const fetchOrderComfirm = async () => {
+    const orders = await orderApi.getOrderComfirm();
+    setOrderComfirm(orders.data);
+    console.log(orders.data);
+  };
+
+  const handleConfirmOrder = async (id) => {
+    try {
+      await orderApi.updateActiveOrder(id);
+      await fetchOrderDefault();
+      await fetchOrderComfirm();
+    } catch (error) {
+      return;
+    }
+  };
+
+  const handleDeleteOrder = async (id) => {
+    try {
+      await orderApi.removeOrder(id);
+      await fetchOrderDefault();
+      await fetchOrderComfirm();
+    } catch (error) {
+      return;
+    }
+  };
+
+  function formatDate(dateString) {
+    const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+    const date = new Date(dateString);
+    return date.toLocaleDateString("vi-VN", options);
+  }
+
   return (
     <>
       <HeaderEmployee>
@@ -24,7 +72,6 @@ export default function OrderManager() {
                   id="searchInput1"
                   className="form-control-emp"
                   placeholder="Search..."
-                 
                 />
               </div>
               <div className="table-responsive-emp">
@@ -38,7 +85,7 @@ export default function OrderManager() {
                         <input type="checkbox" id="checkall1" />
                       </th>
                       <th>Mã đơn hàng</th>
-                      <th>Khách hàng</th>                   
+                      <th>Khách hàng</th>
                       <th>Địa chỉ</th>
                       <th>Vận chuyển</th>
                       <th>Phương thức</th>
@@ -50,42 +97,48 @@ export default function OrderManager() {
                     </tr>
                   </thead>
                   <tbody className="table-tbody-emp">
-                    <tr data-id="1">
-                      <td>
-                        <input type="checkbox" className="checkthis-emp" />
-                      </td>
-                      <td>1</td>
-                      <td>Nguyễn Văn A</td>
-                      <td>123 Đường A, Hà Nội, Việt Nam</td>
-                      <td>VNPost</td>
-                      <td>Thẻ Tín Dụng</td>
-                      <td>5,000,000 VND</td>
-                      <td>28-08-2024</td>
-                      <td>
-                        <button
-                          className="btn btn-primary btn-xs edit-btn-emp"
-                          data-id="1"
-                        >
-                          <i className="fa fa-pencil-alt"></i>
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-danger btn-xs delete-btn-emp"
-                          data-id="1"
-                        >
-                          <i className="fa fa-trash"></i>
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-warning btn-xs confirm-btn-emp"
-                          data-id="1"
-                        >
-                          <i className="fa fa-check"></i>
-                        </button>
-                      </td>
-                    </tr>
+                    {orderDefault.map((order) => {
+                      return (
+                        <tr data-id="{order.id}">
+                          <td>
+                            <input type="checkbox" className="checkthis-emp" />
+                          </td>
+                          <td>{order.id}</td>
+                          <td>{order.user_name}</td>
+                          <td>{order.billing_address}</td>
+                          <td>{order.shipper_name}</td>
+                          <td>{order.payment_methods}</td>
+                          <td>{order.total_amount} VND</td>
+                          <td>{order.order_date}</td>
+                          <td>
+                            <button
+                              className="btn btn-primary btn-xs edit-btn-emp"
+                              data-id="1"
+                            >
+                              <i className="fa fa-pencil-alt"></i>
+                            </button>
+                          </td>
+                          <td>
+                            <button
+                              className="btn btn-danger btn-xs delete-btn-emp"
+                              data-id="1"
+                              onClick={() => handleDeleteOrder(order.id)}
+                            >
+                              <i className="fa fa-trash"></i>
+                            </button>
+                          </td>
+                          <td>
+                            <button
+                              className="btn btn-warning btn-xs confirm-btn-emp"
+                              data-id={order.id}
+                              onClick={() => handleConfirmOrder(order.id)}
+                            >
+                              <i className="fa fa-check"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -114,7 +167,6 @@ export default function OrderManager() {
                     id="searchInput2"
                     className="form-control-emp"
                     placeholder="Search..."
-                  
                   />
                 </div>
                 <div className="table-responsive-emp">
@@ -124,38 +176,49 @@ export default function OrderManager() {
                   >
                     <thead>
                       <tr>
+                        <th></th>
                         <th>Mã đơn hàng</th>
                         <th>Khách hàng</th>
                         <th>Nhân viên</th>
                         <th>Địa chỉ</th>
                         <th>Vận chuyển</th>
                         <th>Phương thức</th>
-                        <th>Tổng</th>
+                        <th>Tổng (VNĐ)</th>
                         <th>Ngày đặt</th>
                         <th>Ngày xác nhận</th>
                       </tr>
                     </thead>
                     <tbody className="table-tbody-emp">
-                      <tr data-id="3">
-                        <td>3</td>
-                        <td>Phạm Văn E</td>
-                        <td>Đỗ Thị F</td>
-                        <td>789 Đường C, Đà Nẵng, Việt Nam</td>
-                        <td>Viettel Post</td>
-                        <td>Chuyển Khoản Ngân Hàng</td>
-                        <td>4,100,000 VND</td>
-                        <td>28-08-2024</td>
-                        <td>28-08-2024</td>
-                      </tr>
+                      {orderComfirm.map((order) => {
+                        return (
+                          <tr data-id="{order.id}">
+                            <td>
+                              <Link to={`/invoice/${order.id}`}>
+                                <button className="btn btn-primary btn-xs print-btn-emp">
+                                  <i className="fa fa-print"></i> In hóa đơn
+                                </button>
+                              </Link>
+                            </td>
+                            <td>{order.id}</td>
+                            <td>{order.user_name}</td>
+                            <td>Đỗ Thị F</td>
+                            <td>{order.billing_address || "---"}</td>
+                            <td>{order.shipper_name || "---"}</td>
+                            <td>{order.payment_methods}</td>
+                            <td>{order.total_amount}</td>
+                            <td>{formatDate(order.order_date)}</td>
+                            <td>{formatDate(order.order_comfirm)}</td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
           </div>
-          </div>
-          <FooterEmployee />
-       
+        </div>
+        <FooterEmployee />
       </HeaderEmployee>
     </>
   );

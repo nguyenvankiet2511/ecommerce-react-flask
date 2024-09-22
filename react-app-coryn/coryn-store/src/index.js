@@ -22,6 +22,7 @@ import "./assets/css/icomoon.css";
 import "./assets/css/login.css";
 import "./assets/css/profile.css";
 import "./assets/css/style-employee.css";
+import "./assets/css/invoice.css";
 
 import Products from "./components/Products";
 import ScrollToTop from "./components/layout/ScrollToTop";
@@ -39,6 +40,7 @@ import HomeEmployee from "./components/employee/HomeEmployee";
 import ProfileEmployee from "./components/employee/ProfileEmployee";
 import OrderManager from "./components/employee/OrderManager";
 import Payment from "./components/employee/Payment";
+import Invoice from "./components/Invoice";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -72,6 +74,9 @@ root.render(
             <Route path="/employee/profile" element={<ProfileEmployee />} />
             <Route path="/employee/order-manager" element={<OrderManager />} />
             <Route path="/employee/payment" element={<Payment />} />
+            <Route path="/invoice/" element={<Invoice />}>
+              <Route path=":orderId" element={<Invoice />} />
+            </Route>
           </Routes>
         </ScrollToTop>
       </CartProvider>

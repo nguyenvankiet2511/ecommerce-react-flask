@@ -15,10 +15,10 @@ class AccountsSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'email', 'username', 'password', 'active', 'users_role_id', 'user_id')
 
-# Schema cho Users
-# class UsersSchema(ma.Schema):
-#     class Meta:
-#         fields = ('id', 'name', 'gender', 'birthDate', 'phone', 'email', 'address', 'photoInf', 'photoPath')
+#Schema cho Users
+class UsersSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'gender', 'birthDate', 'phone', 'email', 'address', 'photoInf', 'photoPath')
 #
 # # Schema cho Employees
 # class EmployeesSchema(ma.Schema):
@@ -60,11 +60,11 @@ class ShippersSchema(ma.Schema):
     class Meta:
         fields = ('id', 'companyName', 'phone', 'fee')
 #
-# # Schema cho Orders
-# class OrdersSchema(ma.Schema):
-#     class Meta:
-#         fields = ('id', 'customer_id', 'employee_id', 'shipper_id', 'billingAddress_id', 'paymentMethods', 'orderDate', 'active', 'totalAmount')
-#
+# Schema cho Orders
+class OrdersSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'customer_id', 'employee_id', 'shipper_id', 'billingAddress_id', 'paymentMethods', 'orderDate', 'active', 'totalAmount')
+
 # # Schema cho OrderDetails
 # class OrderDetailsSchema(ma.Schema):
 #     class Meta:

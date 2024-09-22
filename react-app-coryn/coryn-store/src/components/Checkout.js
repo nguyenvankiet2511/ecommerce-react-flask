@@ -98,6 +98,7 @@ export default function Checkout() {
       name: fisrtName + lastName,
       phone: phone,
       address: address,
+      
       addressDetail: addressDetail,
       customerId: userId,
     };

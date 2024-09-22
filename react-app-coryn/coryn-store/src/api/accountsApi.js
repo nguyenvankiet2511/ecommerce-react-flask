@@ -2,57 +2,50 @@ import axiosClient from "./axiosClients";
 
 const accountsApi = {
   // Đăng nhập
-  getToken: () =>{
-    const url = '/csrf-token';
+  getToken: () => {
+    const url = "/csrf-token";
     return axiosClient.get(url);
-
   },
   login: (formData) => {
-    const url = '/login';
+    const url = "/login";
     return axiosClient.post(url, formData, { withCredentials: true });
-},
-
+  },
 
   // Đăng ký
   register: (userData) => {
-    const url = '/register';
+    const url = "/register";
     return axiosClient.post(url, userData);
   },
 
-
-
   // Lấy thông tin người dùng
-  getUserInfo: () => {
-    const url = '/user';
+  getInfUser(id) {
+    const url = `/get-user/${id}`;
     return axiosClient.get(url);
   },
-  getCurentUser : () =>{
-    const token = localStorage.getItem('token');
+
+  updateInfUser(user_id, data){
+    const url =`/update-user/${user_id}`;
+    return axiosClient.patch(url,data)
+  },
+
+  getCurentUser: () => {
+    const token = localStorage.getItem("token");
     if (!token) {
-      console.error('No token found, user might not be logged in');
+      console.error("No token found, user might not be logged in");
       return null; // Trả về null nếu không có token
     }
-    const url ='/protected';
+    const url = "/protected";
     return axiosClient.get(url, {
       headers: {
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
   },
 
-  
-
-  // Đăng xuất
   logout: () => {
-    const url = '/logout';
+    const url = "/logout";
     return axiosClient.get(url);
   },
-
-  // Cập nhật thông tin người dùng
-  updateUser: (userId, userData) => {
-    const url = `/user/${userId}`;
-    return axiosClient.put(url, userData);
-  }
 };
 
 export default accountsApi;

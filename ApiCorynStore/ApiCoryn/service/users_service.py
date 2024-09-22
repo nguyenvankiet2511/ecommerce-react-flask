@@ -1,6 +1,6 @@
 from ApiCoryn import db
-from ApiCoryn.model import Accounts
-from ApiCoryn.schemas import AccountsSchema
+from ApiCoryn.model import Accounts, Users
+from ApiCoryn.schemas import AccountsSchema, UsersSchema
 from flask import jsonify, json
 import hashlib
 import google.auth.transport.requests
@@ -15,6 +15,8 @@ import hashlib, datetime
 account_schema= AccountsSchema()
 accounts_schema= AccountsSchema(many=True)
 
+user_schema= UsersSchema()
+users_schema= UsersSchema(many=True)
 
 def get_user_oauth():
     flow.fetch_token(authorization_response=request.url)
@@ -39,3 +41,21 @@ def get_all_accounts():
 def auth_user(username, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
     return Accounts.query.filter(Accounts.username.__eq__(username.strip()), Accounts.password.__eq__(password)).first()
+
+def get_inf_user(id):
+    user = Users.query.filter(Users.id == id).first()
+    return user_schema.jsonify(user)
+
+
+def update_inf_user(user_id, name, phone, birthday, photoPath, address):
+    user = Users.query.get(user_id)
+    if user:
+        user.name = name
+        user.phone = phone
+        user.birthday = birthday
+        user.photoPath = photoPath
+        user.address = address
+        db.session.commit()
+        return True  
+    return False
+

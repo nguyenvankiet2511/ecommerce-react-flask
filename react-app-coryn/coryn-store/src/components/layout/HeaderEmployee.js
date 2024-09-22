@@ -1,13 +1,36 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link , useNavigate} from "react-router-dom";
+import { isLoggedIn, deleteTokens, fetchProtectedData } from "../../api/authToken";
+import accountsApi from "../../api/accountsApi";
 
 export default function HeaderEmployee({ children }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [name, setName]= useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await accountsApi.getCurentUser();
+        setName(response.data.logged_in_as.name);
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      }
+    };
+    fetchCurrentUser();
+  }, []);
+  
+  
 
   // Hàm toggle mở/đóng sidebar
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+
+  const logOut=()=>{
+    deleteTokens();
+    navigate("/login");
+  }
 
   return (
     <>
@@ -49,10 +72,10 @@ export default function HeaderEmployee({ children }) {
                 </Link>
               </li>
               <li className="sidebar-item-emp">
-                <Link className="sidebar-link-emp" to="#">
+                <a className="sidebar-link-emp" href="" onClick={logOut}>
                   <i className="fa-solid fa-sign-in-alt"></i>{" "}
                   <span>Đăng xuất</span>
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -96,7 +119,7 @@ export default function HeaderEmployee({ children }) {
                       className="avatar-emp"
                     />
 
-                    <span>Jesse</span>
+                    <span>{name||"Loading.."}</span>
                   </a>
                   <div className="dropdown-menu-emp">
                     <Link className="dropdown-item-emp" to="/employee/profile">
@@ -111,7 +134,7 @@ export default function HeaderEmployee({ children }) {
                     <a className="dropdown-item-emp" href="#">
                       Hỗ trợ
                     </a>
-                    <a className="dropdown-item-emp" href="#">
+                    <a className="dropdown-item-emp" href="#" onClick={logOut}>
                       Đăng xuất
                     </a>
                   </div>

@@ -44,7 +44,7 @@
 .shape-login:last-child {
     background: linear-gradient(to right, #ff512f, #f09819);
     right: -30px;
-    bottom: -80px;
+    bottom: -180px;
     animation: glow-right 5.5s infinite linear; 
 }
 
@@ -123,10 +123,39 @@
 }
 
 
-
+.role-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #2951ae; 
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #4b6cba !important; 
+    color: #fff !important; 
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    cursor: pointer;
+  }
+  
+  .role-select:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  .role-select::-ms-expand {
+    display: none;
+  }
+  
 .form-login{
    
-    height: 550px;
+    height: 700px;
     width: 400px;
     background-color: rgba(255,255,255,0.13);
     position: absolute;

@@ -67,3 +67,11 @@ def add_product():
     result = product_schema.jsonify(new_product)
     return result, 201
 
+def get_price_product(product_id):
+    product = Products.query.filter_by(id=product_id).first()
+    if product:
+        discounted_price = product.price * (1 - product.discount / 100)
+        return discounted_price
+    return 0
+def get_product_by_id(id):
+    return Products.query.filter(Products.id.__eq__(id)).first()

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import HeaderEmployee from "../layout/HeaderEmployee";
 import FooterEmployee from "../layout/FooterEmployee";
 import productsApi from "../../api/productsApi";
+import orderApi from "../../api/orderApi";
 
 export default function Payment() {
   const [products, setProducts] = useState([]);
@@ -104,22 +105,37 @@ export default function Payment() {
       });
     }
   };
-  const handleConfirmPayment = () => {
+  const handleConfirmPayment = async () => {
     // Kiểm tra xem có sản phẩm nào trong danh sách không
     if (productList.length === 0) {
       alert("Vui lòng thêm sản phẩm trước khi xác nhận thanh toán.");
       return;
     }
 
-    // Xử lý thanh toán ở đây
-    // Ví dụ: gửi thông tin thanh toán tới API hoặc thực hiện các bước thanh toán khác
+    const data ={
+      name: customerInfo.name,
+      phone: customerInfo.phone,
+      address: customerInfo.address,
+      birthDate: customerInfo.birthDate,
+      lProductId: productList.map((product)=>product.productID),
+      lQuantity:  productList.map((product)=>product.quantity),
+      employeeId: localStorage.getItem('user_id')
 
-    // In ra thông tin đơn hàng để kiểm tra
+    }
+    console.log(data);
     console.log("Thông tin khách hàng:", customerInfo);
     console.log("Chi tiết đơn hàng:", productList);
-
-    // Thông báo thành công
-    alert("Thanh toán thành công!");
+    try {
+      const response = await orderApi.addOrderByEmployee(data);
+      if (response.status === 201) {
+        alert( "Thanh toán thành công!");
+      } else {
+        alert("Có lỗi xảy ra khi thanh toán.");
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert("Có lỗi xảy ra khi kết nối với máy chủ.");
+    }
   };
 
   return (

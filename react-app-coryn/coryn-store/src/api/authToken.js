@@ -19,15 +19,16 @@ export const isLoggedIn = () => {
         }
       });
       console.log('Protected data:', response.data.logged_in_as);
-      return response; // Trả về dữ liệu từ API
+      return response; 
     } catch (error) {
       console.error('Error fetching protected data:', error);
       deleteTokens();
-      return null; // Trả về null nếu có lỗi
+      return null;
     }
   };
   export function deleteTokens(){
     localStorage.removeItem('token');
     localStorage.removeItem('user_id');
+    localStorage.removeItem('role');
 }
   

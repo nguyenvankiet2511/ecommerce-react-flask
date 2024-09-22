@@ -1,37 +1,37 @@
-import React, { useEffect, useState } from "react"; // Import useState từ React
-import accountsApi from "../api/accountsApi"; 
-import {isLoggedIn, fetchProtectedData}  from "../api/authToken"; 
-import oauthLoginApi from "../api/oauthLogin"
-import { Link,useNavigate  } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import accountsApi from "../api/accountsApi";
+import oauthLoginApi from "../api/oauthLogin";
+import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { isLoggedIn, fetchProtectedData } from "../api/authToken";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const [selectedRole, setSelectedRole] = useState(""); // State for user role selection
 
   // Xử lý đăng nhập bằng Google
   const loginGoogle = async (e) => {
     e.preventDefault();
     try {
-      // Gọi API lấy URL đăng nhập Google
       const response = await oauthLoginApi.getOauthLogin();
       const googleAuthUrl = response.data.authorization_url;
-
-      // Chuyển hướng người dùng đến URL xác thực Google
       window.location.href = googleAuthUrl;
     } catch (err) {
       console.error("Lỗi khi đăng nhập bằng Google", err);
       setError("Failed to login with Google");
     }
   };
+
   // Xử lý thay đổi tên người dùng
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
 
-
+  // Xử lý thay đổi mật khẩu
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
@@ -39,29 +39,59 @@ export default function Login() {
   // Xử lý gửi biểu mẫu
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!selectedRole) {
+      setError("Vui lòng chọn người dùng!");
+      return;
+    }
+
     const formData = {
-      username: username,
-      password: password,
-  };
+      username,
+      password,
+    };
+
     try {
-      // Gọi API đăng nhập
       const response = await accountsApi.login(formData);
       console.log(response.data);
       const accessToken = response.data.access_token;
       const user_id = response.data.user_id;
-      localStorage.setItem('token', accessToken);
-      localStorage.setItem('user_id', user_id);
-      navigate("/");
-   
-      // Xử lý phản hồi thành công
-      setMessage(response.data.message); 
+      const role = response.data.role;
+
+      console.log(role);
+      console.log(selectedRole);
+
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("user_id", user_id);
+
+      if (selectedRole == role) {
+        if (selectedRole == "ADMIN") {
+          navigate("/admin");
+          return;
+        }
+        if (selectedRole == "CUSTOMER") {
+          navigate("/");
+          return;
+        }
+        if (selectedRole == "EMPLOYEE") {
+          navigate("/employee");
+          return;
+        }
+      } else {
+        alert("Tài khoản không chính xác! Vui lòng thử lại.");
+        return;
+      }
+      setMessage(response.data.message);
       setError("");
-     
     } catch (err) {
-      // Xử lý lỗi
       setError(err.response?.data?.error || "An error occurred");
       setMessage("");
     }
+  };
+
+  // Handle role selection
+  const handleRoleChange = (e) => {
+    setSelectedRole(e.target.value);
+    console.log(selectedRole);
   };
 
   return (
@@ -72,10 +102,10 @@ export default function Login() {
           <div className="shape-login"></div>
         </div>
         <form className="form-login" onSubmit={handleSubmit}>
-          <h3>Login Here</h3>
+          <h3>CORYN STORE</h3>
 
           <label className="label-login" htmlFor="username">
-            Email
+            Tên tài khoản
           </label>
           <input
             className="input-login"
@@ -87,7 +117,7 @@ export default function Login() {
           />
 
           <label className="label-login" htmlFor="password">
-            Password
+            Mật khẩu
           </label>
           <input
             className="input-login"
@@ -98,29 +128,46 @@ export default function Login() {
             id="password"
           />
 
+          <label className="label-login" htmlFor="role">
+            Vai trò:
+          </label>
+          <select
+            className="input-login role-select"
+            id="role"
+            value={selectedRole}
+            onChange={handleRoleChange}
+          >
+            <option value="">-- Người sử dụng --</option>
+            <option value="CUSTOMER">Khách hàng</option>
+            <option value="EMPLOYEE">Nhân viên</option>
+            <option value="ADMIN">Quản trị viên</option>  
+          </select>
+
           {message && <div className="message">{message}</div>}
           {error && <div className="error">{error}</div>}
 
           <div className="links">
             {/* 'Forgot Password' link */}
             <div className="forgot-password">
-              <a href="#" >Forgot Password?</a>
+              <a href="#">Quên mật khẩu?</a>
             </div>
 
             {/* 'Create Account' link */}
             <Link to={"/register"}>
               <div className="create-account">
-                <a href="#">Create an account</a>
+                <a href="#">Chưa có tài khoản?</a>
               </div>
             </Link>
           </div>
 
           <button className="button-login" type="submit">
-            Log In
+            Đăng nhập
           </button>
+
           <div className="social">
             <div className="go" onClick={loginGoogle}>
-              <i className="fab fa-google"></i> Google
+              <i class="fa-brands fa-google"></i>
+              Google
             </div>
             <div className="fb">
               <i className="fab fa-facebook"></i> Facebook

@@ -1,7 +1,7 @@
 from ApiCoryn import app, flow, db
 from flask_cors import cross_origin
 from ApiCoryn.service import users_service, categories_service, products_service, cart_service, shipper_sevice, \
-    address_service, order_service
+    address_service, order_service, orderDetail_service
 from ApiCoryn.model import UsersRole, Accounts, Users, Customers, Carts, Orders, OrderDetails
 from flask import render_template, session, flash, jsonify, redirect, request, session
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -42,10 +42,19 @@ def auth_login():
     # Verify user credentials
     user = users_service.auth_user(username=username, password=password)
     if user:
-        # Access attributes directly
+        # Sử dụng UsersRole để lấy tên role
+        role_name = UsersRole(user.users_role_id).name
+
+        # Tạo access token với role
         access_token = create_access_token(
-            identity={"user_id": user.user_id, "name": user.name, "role": user.users_role_id.value})
-        return jsonify({"access_token": access_token, "user_id": user.user_id, "message": "successful"})
+            identity={"user_id": user.user_id, "name": user.name, "role": role_name})
+
+        return jsonify({
+            "access_token": access_token,
+            "user_id": user.user_id,
+            "role": role_name,
+            "message": "successful"
+        })
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
 
@@ -82,7 +91,7 @@ def oauth_callback():
             return jsonify({"access_token": access_token, "message": "successful"})
         else:
             access_token = create_access_token(
-                identity={"user_id": account.user_id, "name": account.name, "role": account.users_role_id.value})
+                identity={"user_id": account.user_id, "name": account.name, "role": account.users_role_id.name})
             return jsonify({"access_token": access_token, "message": "successful"})
     except Exception as err:
         print(err)
@@ -94,6 +103,27 @@ def oauth_callback():
 def protected():
     current_user = get_jwt_identity()  # Lấy thông tin người dùng từ token
     return jsonify(logged_in_as=current_user), 200
+
+
+@app.route('/get-user/<id>', methods=['GET'])
+def get_inf_user(id):
+    return users_service.get_inf_user(id)
+
+
+@app.route('/update-user/<int:user_id>', methods=['PATCH'])
+def update_user(user_id):
+    data = request.get_json()
+
+    name = data.get('name')
+    phone = data.get('phone')
+    birthday = data.get('birthday')
+    photoPath = data.get('photoPath')
+    address = data.get('address')
+    updated = users_service.update_inf_user(user_id, name, phone, birthday, photoPath, address)
+    if updated:
+        return jsonify({"message": "User updated successfully"}), 200
+    else:
+        return jsonify({"message": "User not found or update failed"}), 404
 
 
 # API Categories------------------------------------------>
@@ -182,8 +212,7 @@ def update_cart():
         return jsonify({'message': 'Cập nhật giỏ hàng thành công'}), 200
     except Exception as e:
         print(f"Error: {e}")
-        return jsonify({'error':'Lỗi cập nhật giỏ hàng'}), 500
-
+        return jsonify({'error': 'Lỗi cập nhật giỏ hàng'}), 500
 
 
 @app.route("/cart/remove/<id>", methods=['DELETE'])
@@ -238,6 +267,64 @@ def create_order_customer():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route('/order/payment', methods=['POST', 'GET'])
+def order_payment():
+    try:
+        data = request.get_json()
+        name = data.get('name')
+        phone = data.get('phone')
+        diaChi = data.get('address')
+        ngaySinh = data.get('birthDate')
+        l_productId = data.get('lProductId')
+        l_quantity = data.get('lQuantity')
+        employeeId = data.get('employeeId')
+        if not name or not phone or not l_productId or not l_quantity:
+            return jsonify({'status': 'error', 'message': 'Missing required fields.'}), 400
+        order_service.create_order(
+            name=name,
+            ngaySinh=ngaySinh,
+            diaChi=diaChi,
+            phone=phone,
+            l_soLuong=l_quantity,
+            l_productId=l_productId,
+            employee_id=employeeId
+        )
+        return jsonify({'status': 'success', 'message': 'Order created successfully.'}), 201
+    except Exception as e:
+        print("Error occurred:", str(e))
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+@app.route("/comfirm-order/<id>", methods=['PATCH'])
+def comfirm_order(id):
+    result= order_service.chang_active_order(id)
+    if result:
+        return jsonify("Sucessful")
+    else:
+        return jsonify("Fail")
+@app.route("/delete-order/<id>", methods=["DELETE"])
+def delete_comfirm(id):
+    result = order_service.delete_order(id)
+    if result:
+        return jsonify({"message": "Successful"}), 200
+    else:
+        return jsonify({"message": "Failed to delete order"}), 404
+
+
+@app.route('/get-order-default', methods=['GET'])
+def get_order_default():
+    return order_service.get_all_orders_default()
+
+
+@app.route('/get-order-comfirm', methods=['GET'])
+def get_order_comfirm():
+    return order_service.get_all_orders_confirm()
+
+@app.route('/get-order-invoice/<id>', methods=["GET"])
+def get_order_invoice(id):
+    return order_service.get_order_confirm(id)
+#orderDetail--------------------------------------
+@app.route("/get-order-detail/<order_id>", methods=['GET'])
+def get_order_detail(order_id):
+    return orderDetail_service.get_order_detail(order_id)
 # Shipper------------------------------------------
 @app.route('/shipper', methods=['GET'])
 def view_shipper():
@@ -276,6 +363,10 @@ def add_address():
         return jsonify({"message": "Tạo thành công"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# Shipper-----------------------------------------------------------
+
 
 
 if __name__ == "__main__":

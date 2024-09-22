@@ -145,9 +145,10 @@ class Orders(db.Model):
     customer_id = Column(Integer, ForeignKey('Customers.id'), nullable=False)
     employee_id = Column(Integer, ForeignKey('Employees.id'))
     shipper_id = Column(Integer, ForeignKey('Shippers.id'))
-    billingAddress_id = Column(Integer, ForeignKey('BillingAddress.id'), nullable=False)
-    paymentMethods = Column(String(150), default="Thanh toán khi nhận hàng")
+    billingAddress_id = Column(Integer, ForeignKey('BillingAddress.id'))
+    paymentMethods = Column(String(150), default="Mua hàng trực tiếp")
     orderDate = Column(DateTime, default= datetime.now())
+    orderComfirm= Column(DateTime)
     active = Column(Boolean)
     totalAmount = Column(Double, default=0)
 
@@ -213,9 +214,9 @@ if __name__ == '__main__':
         users_data = [
             Users(name="John Doe", gender=True, birthDate=datetime(1980, 5, 15), phone="123-456-7890",
                   email="john.doe@example.com", address="123 Elm St", photoInf="photo1", photoPath="/photos/john.jpg"),
-            Users(name="Jane Smith", gender=False, birthDate=datetime(1990, 8, 22), phone="234-567-8901",
+            Users(name="Lê Thu Cúc", gender=False, birthDate=datetime(1990, 8, 22), phone="234-567-8901",
                   email="jane.smith@example.com", address="456 Oak St", photoInf="photo2",
-                  photoPath="/photos/jane.jpg"),
+                  photoPath="avatar-01.jpg"),
             Users(name="Alice Johnson", gender=True, birthDate=datetime(1985, 12, 30), phone="345-678-9012",
                   email="alice.johnson@example.com", address="789 Pine St", photoInf="photo3",
                   photoPath="/photos/alice.jpg"),
@@ -250,7 +251,6 @@ if __name__ == '__main__':
             Employees(id=3),
             Employees(id=4),
             Employees(id=5)
-
         ]
         db.session.add_all(employees_data)
         db.session.commit()
@@ -394,4 +394,34 @@ if __name__ == '__main__':
         ]
 
         db.session.add_all(account_data)
+        db.session.commit()
+
+        orders_data = [
+            Orders(customer_id=6, employee_id=2, shipper_id=1, billingAddress_id=1, paymentMethods="COD",
+                   orderDate=datetime.now(), active=False, totalAmount=100000),
+            Orders(customer_id=7, employee_id=3, shipper_id=2, billingAddress_id=2, paymentMethods="Credit Card",
+                   orderDate=datetime.now(), active=False, totalAmount=150000),
+            Orders(customer_id=6, employee_id=4, shipper_id=3, billingAddress_id=3, paymentMethods="Bank Transfer",
+                   orderDate=datetime.now(), active=False, totalAmount=200000),
+            Orders(customer_id=9, employee_id=5, shipper_id=4, billingAddress_id=4, paymentMethods="Mua hàng trực tiếp",
+                   orderDate=datetime.now(), active=True, totalAmount=300000),
+            Orders(customer_id=10, employee_id=2, shipper_id=5, billingAddress_id=5, paymentMethods="Paypal",
+                   orderDate=datetime.now(), active=True, totalAmount=250000)
+        ]
+        db.session.add_all(orders_data)
+        db.session.commit()
+
+
+        order_details_data = [
+            OrderDetails(order_id=1, product_id=1, quantity=2, price=50000, discount=5),
+            OrderDetails(order_id=2, product_id=12, quantity=1, price=30000, discount=0),
+            OrderDetails(order_id=1, product_id=3, quantity=3, price=45000, discount=10),
+            OrderDetails(order_id=3, product_id=11, quantity=2, price=120000, discount=25),
+            OrderDetails(order_id=3, product_id=5, quantity=1, price=120000, discount=10),
+            OrderDetails(order_id=1, product_id=14, quantity=4, price=120000, discount=15),
+            OrderDetails(order_id=2, product_id=7, quantity=5, price=120000, discount=5),
+            OrderDetails(order_id=5, product_id=8, quantity=4, price=120000, discount=17),
+            OrderDetails(order_id=4, product_id=9, quantity=2, price=80000, discount=20)
+        ]
+        db.session.add_all(order_details_data)
         db.session.commit()
