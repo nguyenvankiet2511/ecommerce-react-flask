@@ -8,16 +8,15 @@ const categoriesApi={
 
     },
     get(id){
-        const url= `/categories/${id}`;
+        const url= `/categories-info/${id}`;
         return axiosClient.get(url)
-
     },
     getProductsByCategoryId(id){
         const url= `/categories/${id}`;
         return axiosClient.get(url)
     },
     add(data){
-        const url= '/categories';
+        const url= '/categories/create';
         return axiosClient.post(url, data)
 
     },
@@ -27,7 +26,7 @@ const categoriesApi={
 
     },
     remove(id){
-        const url= `/categories/${id}`;
+        const url= `/categories/delete/${id}`;
         return axiosClient.delete(url)
     }
 

@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask import jsonify
+from sqlalchemy import func
 from sqlalchemy.orm import aliased
 
 from ApiCoryn import db
@@ -197,7 +198,6 @@ def get_order_confirm(order_id):
         .outerjoin(shippers_alias, Orders.shipper_id == shippers_alias.id) \
         .outerjoin(billing_address_alias, Orders.billingAddress_id == billing_address_alias.id) \
         .filter(Orders.id == order_id) \
-        .filter(Orders.active == True) \
         .first()
 
     if order:
@@ -223,3 +223,42 @@ def get_order_confirm(order_id):
     else:
         return jsonify({'message': 'Order not found'}), 404
 
+
+def get_order_details_with_info(month, year):
+    results = (
+        db.session.query(
+            OrderDetails.id.label("order_detail_id"),
+            Products.name.label("product_name"),
+            OrderDetails.product_id.label("product_id"),
+            OrderDetails.quantity.label("quantity"),
+            OrderDetails.price.label("price"),
+            Orders.orderDate.label("order_time"),
+            Users.name.label("customer_name"),
+            Orders.active.label("status")
+        )
+        .join(Products, Products.id == OrderDetails.product_id)
+        .join(Orders, Orders.id == OrderDetails.order_id)
+        .join(Customers, Customers.id == Orders.customer_id)
+        .join(Users, Users.id == Customers.id)
+        # Thêm điều kiện để lọc theo tháng và năm hiện tại
+        .filter(func.extract('month', Orders.orderDate) == month,
+                func.extract('year', Orders.orderDate) == year)
+        .all()
+    )
+
+    # Chuyển đổi kết quả thành danh sách từ các đối tượng
+    order_details = []
+    for row in results:
+        order_details.append({
+            "order_detail_id": row.order_detail_id,
+            "product_name": row.product_name,
+            "product_id": row.product_id,
+            "quantity": row.quantity,
+            "price": row.price,
+            "order_time": row.order_time,
+            "customer_name": row.customer_name,
+            "status": row.status
+        })
+
+    # Trả về dữ liệu dưới dạng JSON
+    return jsonify(order_details)

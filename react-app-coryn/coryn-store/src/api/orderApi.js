@@ -21,10 +21,22 @@ const orderApi={
         return axiosClient.get(url)
     },
 
+    getOrderInfoStatis( data){
+        const url= '/get-all-order-info';
+        return axiosClient.post(url, data)
+    },
+
     getOrderDetail(id){
         const url= `/get-order-detail/${id}`;
         return axiosClient.get(url)
     },
+
+    getHistoryOrder(user_id){
+        const url= `/get-history-order/${user_id}`;
+        return axiosClient.get(url)
+
+    },
+
 
     getCartByUserId(user_id){
         const url= `/cart/${user_id}`;
@@ -37,6 +49,10 @@ const orderApi={
         return axiosClient.get(url)
 
     },
+
+ 
+
+
     addOrderByCustomer(data){
         const url= '/order/create-order-customer';
         return axiosClient.post(url, data)
@@ -49,8 +65,19 @@ const orderApi={
         const url= `/comfirm-order/${id}`;
         return axiosClient.patch(url)
     },
+
+    updateOrderDetail(data){
+        const url= `/update-order-detail`;
+        return axiosClient.patch(url, data)
+    },
+
     removeOrder(id){
         const url= `/delete-order/${id}`;
+        return axiosClient.delete(url)
+    },
+
+    removeOrderDetail(id){
+        const url= `/delete-order-detail/${id}`;
         return axiosClient.delete(url)
     }
 

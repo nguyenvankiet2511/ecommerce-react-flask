@@ -8,7 +8,7 @@ import { useCart } from "../../components/context/CartContext";
 
 export default function Header() {
   const { cartCount, updateCartCount } = useCart(0)|| {};
-  const checkLoggedIn = isLoggedIn();
+  const [checkLoggedIn,setCheckLoggedIn] = useState(false) ;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const userId = localStorage.getItem("user_id");
   const [menuActive, setMenuActive] = useState(false);
@@ -41,6 +41,7 @@ export default function Header() {
   }, [menuActive]);
   //Lấy current user
   useEffect(() => {
+    setCheckLoggedIn(isLoggedIn);
     fetchCurrentUser();
   }, []);
 
@@ -59,7 +60,7 @@ export default function Header() {
     const fetchCountCart = async () => {
       try {
         const count = await cartApi.getCountCartByUserId(userId);
-        updateCartCount(count.data.cart_count); // Cập nhật số lượng giỏ hàng
+        updateCartCount(count.data.cart_count); 
       } catch (error) {
         console.error("Error fetching cart count:", error);
       }
@@ -210,6 +211,15 @@ export default function Header() {
                                     aria-hidden="true"
                                   ></i>
                                   Hồ sơ
+                                </Link>
+                              </li>
+                              <li>
+                                <Link to="/history">
+                                  <i
+                                    className="fa fa-history"
+                                    aria-hidden="true"
+                                  ></i>
+                                  Đã mua
                                 </Link>
                               </li>
                               <li>

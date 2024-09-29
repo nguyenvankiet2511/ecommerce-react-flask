@@ -111,12 +111,14 @@ export default function OrderManager() {
                           <td>{order.total_amount} VND</td>
                           <td>{order.order_date}</td>
                           <td>
-                            <button
-                              className="btn btn-primary btn-xs edit-btn-emp"
-                              data-id="1"
-                            >
-                              <i className="fa fa-pencil-alt"></i>
-                            </button>
+                            <Link to={`/employee/order-detail/${order.id}`}>
+                              <button
+                                className="btn btn-primary btn-xs edit-btn-emp"
+                                data-id="1"
+                              >
+                                <i className="fa fa-pencil-alt"></i>
+                              </button>
+                            </Link>
                           </td>
                           <td>
                             <button

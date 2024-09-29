@@ -486,6 +486,10 @@ table th-invo {
     z-index: 0;
     background-image: linear-gradient(to bottom, #ff0000, #ff8100);
 }
+.btn-exit-invo{
+    background-color: #dc3545; /* Màu đỏ */
+  color: white;
+}
 
 /** MEDIA **/
 @media (max-width: 992px) {

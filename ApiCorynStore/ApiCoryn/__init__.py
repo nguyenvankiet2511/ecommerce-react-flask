@@ -16,6 +16,8 @@ app.config["SECRET_KEY"] = "sacfasfgwgwgwgwgwegehehehehru5hrt"
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:123456@localhost/db_coryn_store?charset=utf8mb4"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
+UPLOAD_FOLDER = 'public/images'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 jwt = JWTManager(app)
 db = SQLAlchemy(app)
 ma = Marshmallow(app)

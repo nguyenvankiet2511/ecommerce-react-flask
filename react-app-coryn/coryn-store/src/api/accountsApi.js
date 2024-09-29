@@ -1,6 +1,35 @@
 import axiosClient from "./axiosClients";
 
 const accountsApi = {
+
+  getAllAccount: ()=>{
+    const url = "/get-all-account";
+    return axiosClient.get(url);
+
+  },
+
+  getAccountById: (id)=>{
+    const url = `/get-account/${id}`;
+    return axiosClient.get(url);
+
+  },
+
+  createAccount:(data)=>{
+    const url =`/create-account`;
+    return axiosClient.post(url, data)
+  },
+
+  changeActiveAccount(id){
+    const url =`/change-active-account/${id}`;
+    return axiosClient.patch(url)
+  },
+
+  removeAccount(id){
+    const url =`/remove-account/${id}`;
+    return axiosClient.delete(url)
+  },
+
+
   // Đăng nhập
   getToken: () => {
     const url = "/csrf-token";

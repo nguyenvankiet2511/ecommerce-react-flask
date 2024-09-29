@@ -1,0 +1,124 @@
+.text-statis {
+    font-size: 32px;
+    color: #000; 
+    font-weight: lighter; 
+}
+.margin-bottom-statis{
+    margin-bottom:15px ;
+
+}
+.card-statis {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    border-radius: 8px; 
+}
+/*Các khả năng lỗi*/
+.custom-button-group {
+    display: flex;              
+    justify-content: center;     
+    align-items: center;         
+    margin: 20px 0;            
+}
+
+.custome-time-select {
+    display: flex;               
+    align-items: center;       
+}
+
+.date-picker-container {
+    display: flex;             
+    flex-direction: column;    
+    margin-right: 15px;         
+}
+
+.date-label {
+    font-size: 14px;           
+    color: gray;                
+    margin-bottom: 5px;       
+}
+
+.input-purchaseDate {
+    font-size: 13px;            
+    padding: 8px;              
+    border: 1px solid #ccc;     
+    border-radius: 4px;        
+    width: 150px;              
+}
+
+.custom-button {
+    background-color: #4CAF50; 
+    color: white;               
+    border: none;               /* Không có đường viền */
+    padding: 10px 15px;        /* Khoảng cách bên trong button */
+    border-radius: 4px;        /* Độ bo góc cho button */
+    cursor: pointer;            /* Hiển thị con trỏ như một nút nhấn */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+}
+
+.custom-button:hover {
+    background-color: #45a049; /* Màu nền khi hover */
+}
+/**/
+.table-statis {
+    border-collapse: collapse; /* Để bỏ khoảng trống giữa các ô */
+    width: 100%;
+  }
+  .table-statis thead{
+    border-bottom: 2px solid #000 !important;
+  }
+  .table-statis th{
+    font-weight: bold !important;
+  }
+
+  .table-statis tr{
+    border-bottom: 1.5px solid #000 !important;
+    line-height: 0.1 !important; 
+  }
+  
+  .table-statis th, .table-statis td {
+   
+    line-height: 0.1 !important; 
+  }
+  
+  .table-striped-statis tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9 ; /* Màu nền cho hàng chẵn */
+  }
+  
+  .table-hover-statis tbody tr:hover {
+    background-color: #e5e5e5 !important; /* Màu nền cho hàng khi hover */
+  }
+  
+  .btn-outline-primary-statis {
+    border-color: #007bff; /* Màu viền nút */
+    color: #007bff; /* Màu chữ nút */
+  }
+  
+  .btn-outline-primary-statis:hover {
+    background-color: #007bff; /* Màu nền khi hover */
+    color: white; /* Màu chữ khi hover */
+  }
+
+  /**/
+  .p-table-statis{
+    min-width: 100px !important;
+
+  }
+
+  .table-responsive {
+    max-height: 450px;
+    overflow-y: auto;
+    scrollbar-width: thin; /* Đối với Firefox */
+  }
+  
+  .table-responsive::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .table-responsive::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+  }
+  .heigh-chart{
+    height: 500px;
+  }
+  
+  

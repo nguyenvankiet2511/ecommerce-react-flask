@@ -1,10 +1,12 @@
 import React from 'react';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
+import { CartProvider} from "./context/CartContext";
 
 export default function SucessfulCheckout() {
   return (
     <>
+     <CartProvider>
       <Header />
       <div>
         <div className="success-container">
@@ -24,6 +26,7 @@ export default function SucessfulCheckout() {
         </div>
       </div>
       <Footer />
+      </CartProvider>
     </>
   );
 }

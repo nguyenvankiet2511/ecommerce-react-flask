@@ -1,0 +1,102 @@
+.container-admin {
+    width: 50%;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.title-admin {
+    text-align: center;
+    color: #4caf50;
+    margin-bottom: 20px;
+}
+
+.form-group-admin {
+    margin-bottom: 15px;
+}
+
+.label-admin {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input-admin, .textarea-admin {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.textarea-admin {
+    resize: none;
+}
+
+.btn-admin {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+   
+    width: 110px;
+}
+
+.btn-admin:hover {
+    background-color: #45a049;
+}
+
+.mt-5-admin {
+    margin-top: 3rem;
+}
+
+.btn-admin {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary-admin {
+    background-color: #4caf50;
+    color: white;
+}
+
+.btn-primary-admin:hover {
+    background-color: #45a049;
+}
+
+.btn-secondary-admin {
+    background-color: #f44336;
+    color: white;
+    margin-left: 10px;
+}
+
+.btn-secondary-admin:hover {
+    background-color: #d32f2f;
+}
+.input-group {
+    position: relative;
+  }
+  
+  .btn-show-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #007bff; /* Màu của nút */
+  }
+  

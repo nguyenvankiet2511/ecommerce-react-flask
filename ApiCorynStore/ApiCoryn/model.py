@@ -21,11 +21,9 @@ class Accounts(db.Model, UserMixin):
     email = Column(String(255), unique=True)
     username = Column(String(50), unique=True)
     password = Column(String(255))
-    active = Column(Boolean)
+    active = Column(Boolean, default=True)
     users_role_id = Column(Enum(UsersRole), default=UsersRole.CUSTOMER)
     user_id = Column(Integer, ForeignKey('Users.id'), nullable=False)
-
-    # Đổi tên backref để tránh xung đột
     feedback_customers = relationship("FeedbackCustomers", backref="account")
     messages = relationship("Messages", backref="account")
     feedback_products = relationship("FeedbackProduct", backref="account")
@@ -87,6 +85,7 @@ class Categories(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False, unique=True)
     photoCategory = Column(String(255), nullable=False)
+    #description = Column(Text)
     products = relationship("Products", backref="category")
 
 
@@ -103,6 +102,7 @@ class Products(db.Model):
     discount = Column(Integer, default=0)
     createdDate = Column(DateTime)
     updatedDate = Column(DateTime)
+    active= Column(Boolean, default=True)
 
     feedback_products = relationship("FeedbackProduct", backref="product")
     order_details = relationship("OrderDetails", backref="product")

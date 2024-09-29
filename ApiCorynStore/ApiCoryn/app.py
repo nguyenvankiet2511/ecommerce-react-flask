@@ -1,7 +1,10 @@
+import os
+from datetime import datetime
+
 from ApiCoryn import app, flow, db
 from flask_cors import cross_origin
 from ApiCoryn.service import users_service, categories_service, products_service, cart_service, shipper_sevice, \
-    address_service, order_service, orderDetail_service
+    address_service, order_service, orderDetail_service, account_service, statis_service
 from ApiCoryn.model import UsersRole, Accounts, Users, Customers, Carts, Orders, OrderDetails
 from flask import render_template, session, flash, jsonify, redirect, request, session
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -135,6 +138,9 @@ def view_category():
 @app.route("/categories/<categoryId>", methods=['GET'])
 def view_product_by_categoryId(categoryId):
     return products_service.get_products_by_categoryId(categoryId)
+@app.route('/categories-info/<id>', methods=['GET'])
+def get_category_by_id(id):
+    return  categories_service.get_categories(id)
 
 
 @app.route("/categories/delete/<category_id>", methods=['DELETE'])
@@ -147,15 +153,32 @@ def update_category(category_id):
     return categories_service.update_category(category_id)
 
 
-@app.route("/categories/create/<category_id>", methods=['POST'])
+@app.route("/categories/create", methods=['POST'])
 def add_category():
-    return categories_service.create_categories()
+    data = request.form  # Sử dụng request.form để lấy dữ liệu từ form
+    name = data.get('name')
+    description = data.get('description')
+    photoCategory = None
+    # Xử lý upload file
+    if 'photoCategory' in request.files:
+        file = request.files['photoCategory']
+        if file and categories_service.allowed_file(file.filename):
+            filename = file.filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            photoCategory = filename
 
+    # Gọi hàm create_categories với các tham số
+    result = categories_service.create_categories(name=name, photoCategory=photoCategory, description=description)
+
+    if result:
+        return jsonify('Success'), 200
+    else:
+        return jsonify("Fail"), 401
 
 # API Products-------------------------------------------->
 @app.route("/products", methods=['GET'])
 def view_product():
-    return products_service.get_all_products()
+    return products_service.get_products_with_category()
 
 
 @app.route("/products/<product_id>", methods=['GET'])
@@ -171,7 +194,56 @@ def view_product_by_name_and_price():
 @app.route("/products/search/<name>", methods=['GET'])
 def view_product_by_name(name):
     return products_service.get_product_by_name(name)
+@app.route("/products/change-active/<product_id>", methods=['PATCH','POST'])
+def remove_product(product_id):
+    return products_service.change_active_product(product_id=product_id)
+#Account--------------------------------------------------------------
+@app.route('/get-all-account', methods=['GET'])
+def get_all_account():
+    return account_service.get_all_account()
+@app.route('/get-account/<id>', methods=['GET'])
+def get_account_by_id(id):
+    return account_service.get_account_by_id(id)
+@app.route('/change-active-account/<id>', methods=['PATCH'])
+def change_active_account(id):
+   result= account_service.chang_active_account(id)
+   if result:
+       return jsonify("Sucessful"),200
+   else:
+       return jsonify("Fail"), 401
 
+
+@app.route('/create-account', methods=['POST'])
+def create_account():
+    data = request.get_json()
+    print(data)
+    name = data.get('name')
+    username = data.get('username')
+    password = data.get('password')
+    email = data.get('email')
+    users_role_id = data.get('user_role_id')
+    email_exists=account_service.email_exists(email=email)
+    print(email_exists)
+    is_account = account_service.username_exists(username)
+    print(is_account)
+    if email_exists:
+        print('acsnvnacnacn')
+        return jsonify(msg="Email đã được đăng ký tài khoản")
+    elif is_account:
+        print("kkkkk")
+        return jsonify(msg="Tên tài khoản đã tồn tại")
+    else:
+        account_service.add_account(username=username, password=password, name=name, user_role_id=users_role_id, email=email)
+        return jsonify(msg="Tài khoản đã được tạo thành công"), 201
+
+
+@app.route('/remove-account/<id>', methods=['DELETE'])
+def remove_account(id):
+    result = account_service.remove_account(id)
+    if result:
+        return jsonify("Sucessful"), 200
+    else:
+        return jsonify("Fail"), 401
 
 # API Cart------------------------------------------------------------------
 @app.route('/cart_count/<user_id>', methods=['GET'])
@@ -242,6 +314,13 @@ def view_cart(user_id):
 
 
 # Order-------------------------------------------------------------
+
+@app.route("/get-all-order-info", methods=['POST'])
+def get_list_order_statis():
+    data = request.get_json()
+    month = data.get('month')
+    year = data.get('year')
+    return order_service.get_order_details_with_info(month,year)
 @app.route("/order/create-order-customer", methods=['POST'])
 def create_order_customer():
     try:
@@ -293,13 +372,17 @@ def order_payment():
     except Exception as e:
         print("Error occurred:", str(e))
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
 @app.route("/comfirm-order/<id>", methods=['PATCH'])
 def comfirm_order(id):
-    result= order_service.chang_active_order(id)
+    result = order_service.chang_active_order(id)
     if result:
         return jsonify("Sucessful")
     else:
         return jsonify("Fail")
+
+
 @app.route("/delete-order/<id>", methods=["DELETE"])
 def delete_comfirm(id):
     result = order_service.delete_order(id)
@@ -318,13 +401,49 @@ def get_order_default():
 def get_order_comfirm():
     return order_service.get_all_orders_confirm()
 
+
 @app.route('/get-order-invoice/<id>', methods=["GET"])
 def get_order_invoice(id):
     return order_service.get_order_confirm(id)
-#orderDetail--------------------------------------
+
+
+# orderDetail--------------------------------------
 @app.route("/get-order-detail/<order_id>", methods=['GET'])
 def get_order_detail(order_id):
     return orderDetail_service.get_order_detail(order_id)
+
+
+@app.route("/update-order-detail", methods=['PATCH'])
+def update_order_detail():
+    data = request.get_json()
+    order_id = data.get('orderId')
+    l_order_detail_id = data.get('lOrderDetailId')
+    l_quantity = data.get('lQuantity')
+    l_price = data.get('lPrice')
+    l_discount = data.get('lDiscount')
+    result = orderDetail_service.change_order_detail(l_order_detail_id=l_order_detail_id, l_quantity=l_quantity,
+                                                     l_price=l_price,
+                                                     l_discount=l_discount, order_id=order_id)
+    if result:
+        return jsonify('Sucessful'), 200
+    else:
+        return jsonify('Fail'), 401
+
+
+@app.route("/detele-order-detail/<id>", methods=['DELETE'])
+def remove_order_detail(id):
+    result = orderDetail_service.delete_order_detail(id)
+    if result:
+        return jsonify({"message": "Successful"}), 200
+    else:
+        return jsonify({"message": "Failed to delete order"}), 404
+
+
+@app.route('/get-history-order/<customer_id>', methods=['GET'])
+def get_history_order(customer_id):
+    return orderDetail_service.get_orders_with_products(customer_id=customer_id)
+
+
 # Shipper------------------------------------------
 @app.route('/shipper', methods=['GET'])
 def view_shipper():
@@ -366,8 +485,77 @@ def add_address():
 
 
 # Shipper-----------------------------------------------------------
+#Statistic------------------------------------------------------
+@app.route('/get-revenue-product', methods=['GET'])
+def get_revenue_product():
+    current_date = datetime.now()
+    year = current_date.year
+    month = current_date.month
+    return statis_service.doanh_thu_san_pham_theo_thang_nam(month,year)
+
+@app.route('/get-inventory', methods=['GET'])
+def get_inventory():
+    return statis_service.tong_ton_kho()
 
 
+@app.route('/get-product-best-seller', methods=['POST'])
+def get_product_best_seller_month():
+    data = request.get_json()
+    month = data.get('month')
+    year = data.get('year')
+    if month is None or year is None:
+        return jsonify({"error": "Missing month or year"}), 400
+    return statis_service.get_best_selling_product(month, year)
+
+@app.route('/get-revenue', methods=['POST'])
+def get_revenue():
+    data = request.get_json()
+    month = data.get('month')
+    year = data.get('year')
+    if month is None or year is None:
+        return jsonify({"error": "Missing month or year"}), 400
+    return statis_service.get_revenue(month, year)
+
+@app.route('/get-total-item-sold', methods=['POST'])
+def get_total_item_sold():
+    data = request.get_json()
+    month = data.get('month')
+    year = data.get('year')
+    if month is None or year is None:
+        return jsonify({"error": "Missing month or year"}), 400
+    return statis_service.get_total_items_sold(month, year)
+
+@app.route('/get-revenue-quarter', methods=['POST'])
+def revenue_by_quarter():
+    data = request.get_json()
+    year = data.get('year')
+    revenue = statis_service.get_revenue_by_quarter(year)
+    return jsonify({
+        'year': year,
+        'quarters': revenue
+    })
+
+@app.route('/get-revenue-category', methods=['POST'])
+def get_revenue_category():
+    data = request.get_json()
+    month = data.get('month')
+    year = data.get('year')
+    return statis_service.doanh_thu_theo_danh_muc(month, year)
+
+@app.route('/get-revenue-product', methods=['POST'])
+def get_revenue_product_pie():
+    data = request.get_json()
+    month = data.get('month')
+    year = data.get('year')
+    return statis_service.get_revenue_product(month, year)
+@app.route('/get-revenue-two-year', methods=['POST'])
+def get_revenue_two_year():
+    data = request.get_json()
+    year = data.get('year')
+    return statis_service.get_revenue_last_2_years( year)
+@app.route('/get-revenue-three-year', methods=['GET'])
+def get_revenue_three_year():
+    return statis_service.get_revenue_last_3_years()
 
 if __name__ == "__main__":
     app.run(host='localhost', port=5001, debug=True)

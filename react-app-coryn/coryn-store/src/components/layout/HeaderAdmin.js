@@ -3,7 +3,7 @@ import { Link , useNavigate} from "react-router-dom";
 import { isLoggedIn, deleteTokens, fetchProtectedData } from "../../api/authToken";
 import accountsApi from "../../api/accountsApi";
 
-export default function HeaderEmployee({ children }) {
+export default function HeaderAdmin({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName]= useState("");
   const navigate = useNavigate();
@@ -37,14 +37,14 @@ export default function HeaderEmployee({ children }) {
       <div className="wrapper-container">
         <nav id="sidebar-emp" className={isOpen ? "open" : ""}>
           <div className="sidebar-content-emp">
-            <Link className="sidebar-brand-emp" to="/employee">
+            <Link className="sidebar-brand-emp" to="/admin">
               <span>CORYN STORE</span>
             </Link>
             <ul className="sidebar-nav-emp">
               <li className="sidebar-header-emp">Pages</li>
              
               <li className="sidebar-item-emp active">
-                <Link className="sidebar-link-emp" to="/employee">
+                <Link className="sidebar-link-emp" to="/admin">
                   <i className="fa-solid fa-house"></i> <span>Trang chủ</span>
                 </Link>
               </li>
@@ -54,26 +54,32 @@ export default function HeaderEmployee({ children }) {
                 </Link>
               </li>
               <li className="sidebar-item-emp">
-                <Link className="sidebar-link-emp" to="/customercare">
-                  <i className="fa-solid fa-headset"></i>{" "}
-                  <span>Chăm sóc khách hàng</span>
+                <Link className="sidebar-link-emp" to="/admin/category-manager">
+                  <i className="fa-solid fa-boxes-stacked"></i>{" "}
+                  <span>Quản lý danh mục</span>
                 </Link>
               </li>
               <li className="sidebar-item-emp">
-                <Link className="sidebar-link-emp" to="/employee/order-manager">
-                  <i className="fa fa-clipboard-list"></i>{" "}
-                  <span>Quản lý đơn hàng</span>
+                <Link className="sidebar-link-emp" to="/admin/product-manager">
+                  <i className="fa-solid fa-tag"></i>{" "}
+                  <span>Quản lý sản phẩm</span>
                 </Link>
               </li>
               <li className="sidebar-item-emp">
-                <Link className="sidebar-link-emp" to="/employee/payment">
-                  <i className="fa fa-credit-card"></i>{" "}
-                  <span>Thanh toán đơn hàng</span>
+                <Link className="sidebar-link-emp" to="/admin/account-manager">
+                  <i className="fa-solid fa-key"></i>{" "}
+                  <span>Quản lý tài khoản</span>
+                </Link>
+              </li>
+              <li className="sidebar-item-emp">
+                <Link className="sidebar-link-emp" to="/admin/statistic">
+                  <i className="fa-solid fa-chart-line"></i>{" "}
+                  <span>Thống kê doanh thu</span>
                 </Link>
               </li>
               <li className="sidebar-item-emp">
                 <a className="sidebar-link-emp" href="" onClick={logOut}>
-                  <i className="fas fa-sign-out-alt"></i>{" "}
+                  <i className="fa-solid fa-right-from-bracket"></i>{" "}
                   <span>Đăng xuất</span>
                 </a>
               </li>

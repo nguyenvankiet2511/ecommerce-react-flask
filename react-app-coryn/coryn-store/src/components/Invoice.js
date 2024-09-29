@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import orderApi from "../api/orderApi";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -7,12 +7,17 @@ import { saveAs } from 'file-saver';
 
 export default function Invoice() {
   const params = useParams();
+  const navigate= useNavigate();
   const [order, setOrder] = useState(null);
   const [orderDetail, setOrderDetail] = useState([]);
 
   useEffect(() => {
     fetchInfOrder();
   }, [params.orderId]);
+
+  const handlExit =()=>{
+   navigate("/employee/order-manager")
+  }
 
   
   const downloadInvoice = () => {
@@ -24,7 +29,6 @@ export default function Invoice() {
       const pageHeight = pdf.internal.pageSize.height;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       let heightLeft = imgHeight;
-  
       let position = 0;
   
       pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
@@ -38,9 +42,8 @@ export default function Invoice() {
       }
   
       // Xuất PDF dưới dạng blob và sử dụng FileSaver.js
-      pdf.output("blob").then((blob) => {
-        saveAs(blob, `invoice_${order ? order.id : "unknown"}.pdf`);
-      });
+      const blob = pdf.output("blob"); // No need for .then here
+      saveAs(blob, `invoice_order#${order ? order.id : "unknown"}.pdf`);
     });
   };
   
@@ -321,6 +324,13 @@ export default function Invoice() {
                     className="btn btn-lg btn-download-invo btn-theme"
                   >
                     <i className="fa fa-download"></i> Download Invoice
+                  </a>
+                  <a
+                    id="invoice_download_btn"
+                    onClick={handlExit}
+                    className="btn btn-lg btn-exit-invo btn-download-invo btn-theme"
+                  >
+                    <i className="fa fa-sign-out"></i> Exit
                   </a>
                 </div>
               </div>

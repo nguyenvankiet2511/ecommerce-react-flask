@@ -23,6 +23,8 @@ import "./assets/css/login.css";
 import "./assets/css/profile.css";
 import "./assets/css/style-employee.css";
 import "./assets/css/invoice.css";
+import "./assets/css/style-admin.css";
+import "./assets/css/statistic.css";
 
 import Products from "./components/Products";
 import ScrollToTop from "./components/layout/ScrollToTop";
@@ -41,6 +43,19 @@ import ProfileEmployee from "./components/employee/ProfileEmployee";
 import OrderManager from "./components/employee/OrderManager";
 import Payment from "./components/employee/Payment";
 import Invoice from "./components/Invoice";
+import OrderDetail from "./components/employee/OrderDetail";
+import HistoryOrder from "./components/HistoryOrder";
+import CategoriesManager from "./components/admin/CategoriesManager";
+import CreateCategory from "./components/admin/CreateCategory";
+import HomeAdmin from "./components/admin/HomeAdmin";
+import ProductsManager from "./components/admin/ProductsManager";
+import CreateProduct from "./components/admin/CreateProduct";
+import UpdateCategory from "./components/admin/UpdateCategory";
+import UpdateProduct from "./components/admin/UpdateProduct";
+import AccountManager from "./components/admin/AccountManager";
+import UpdateAccount from "./components/admin/UpdateAccount";
+import CreateAccount from "./components/admin/CreateAccount";
+import Statistic from "./components/admin/Statistic";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -51,7 +66,7 @@ root.render(
         {/* Wrap the application with CartProvider */}
         <ScrollToTop>
           <Routes>
-            <Route path="/" element={<App />} />
+            <Route path="/" element={<Statistic />} />
             <Route path="/login" element={<Login />} />
             <Route path="/callback" element={<OAuthCallback />} />
             <Route path="/register" element={<Register />} />
@@ -69,6 +84,7 @@ root.render(
             <Route path="/about" element={<About />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/history" element={<HistoryOrder />} />
             <Route path="/sucessful-checkout" element={<SucessfulCheckout />} />
             <Route path="/employee" element={<HomeEmployee />} />
             <Route path="/employee/profile" element={<ProfileEmployee />} />
@@ -77,6 +93,24 @@ root.render(
             <Route path="/invoice/" element={<Invoice />}>
               <Route path=":orderId" element={<Invoice />} />
             </Route>
+            <Route
+              path="/employee/order-detail/:orderId"
+              element={<OrderDetail />}
+            />
+             <Route path="/admin" element={<HomeAdmin/>}/>
+
+            <Route path="/admin/category-manager" element={<CategoriesManager/>}/>
+            <Route path="/admin/create-category" element={<CreateCategory/>}/>
+            <Route path="/admin/update-category/:categoryId" element={<UpdateCategory/>}/>
+
+            <Route path="/admin/product-manager" element={<ProductsManager/>}/>
+            <Route path="/admin/create-product" element={<CreateProduct/>}/>
+            <Route path="/admin/update-product/:productId" element={<UpdateProduct />} />
+
+            <Route path="/admin/account-manager" element={<AccountManager/>}/>
+            <Route path="/admin/create-account" element={<CreateAccount/>}/>
+            <Route path="/admin/update-account/:accountId" element={<UpdateAccount />} />
+            <Route path="/admin/statistic" element={<Statistic />} />
           </Routes>
         </ScrollToTop>
       </CartProvider>

@@ -166,7 +166,7 @@ export default function Checkout() {
       customer_id: userId, 
       address_id: selectedAddress, 
       shipper_id: shipperId, 
-      total: totalAmount, 
+      total: totalAmount+ shippingFee, 
       paymentMethods: paymentMethod, 
       l_productId: listCart.map((item) => item.product_id), 
       l_quantity: listCart.map((item) => item.quantity), 

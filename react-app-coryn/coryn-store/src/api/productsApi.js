@@ -22,9 +22,9 @@ const productsApi={
         return axiosClient.patch(url, data)
 
     },
-    remove(id){
-        const url= `/products/${id}`;
-        return axiosClient.delete(url)
+    changeActive(id){
+        const url= `/products/change-active/${id}`;
+        return axiosClient.patch(url)
     }
 
 };
