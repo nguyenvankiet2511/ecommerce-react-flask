@@ -11,7 +11,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState(""); // State for user role selection
+  const [selectedRole, setSelectedRole] = useState(""); 
 
   // Xử lý đăng nhập bằng Google
   const loginGoogle = async (e) => {
@@ -25,6 +25,28 @@ export default function Login() {
       setError("Failed to login with Google");
     }
   };
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    const token = query.get('access_token'); // Lấy token từ URL
+  
+    if (token) {
+      localStorage.setItem("access_token", token); // Lưu token vào local storage
+      // Gọi API để xác thực token và nhận dữ liệu người dùng
+      oauthLoginApi.fetchUserData(token)
+        .then(response => {
+          console.log(response.data); // Xử lý thông tin người dùng
+          const userId = response.data.user_id; // Giả sử có user_id
+          localStorage.setItem("user_id", userId); // Lưu user_id
+          navigate('/home'); // Chuyển hướng đến trang chính
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+        });
+    }
+  }, [navigate]);
+
+ 
 
   // Xử lý thay đổi tên người dùng
   const handleUsernameChange = (e) => {

@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosClient from "./axiosClients";
 
 const accountsApi = {
@@ -70,6 +71,12 @@ const accountsApi = {
       },
     });
   },
+
+  getOuthLogin: (token) => axios.get('/callback', {
+    headers: { Authorization: `Bearer ${token}` }
+  }),
+
+
 
   logout: () => {
     const url = "/logout";

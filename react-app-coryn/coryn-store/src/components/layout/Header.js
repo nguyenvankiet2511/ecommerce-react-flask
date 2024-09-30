@@ -71,13 +71,21 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
+      // Clear tokens or perform any logout operations
       deleteTokens();
+  
       console.log("User logged out");
-      navigate("/");
+  
+      if (window.location.pathname === '/') {
+        window.location.reload();
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       console.error("Error during logout:", error);
     }
   };
+  
 
   const setHeader = () => {
     const header = headerRef.current;

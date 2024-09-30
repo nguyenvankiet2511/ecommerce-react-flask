@@ -66,7 +66,7 @@ root.render(
         {/* Wrap the application with CartProvider */}
         <ScrollToTop>
           <Routes>
-            <Route path="/" element={<Statistic />} />
+            <Route path="/" element={<App />} />
             <Route path="/login" element={<Login />} />
             <Route path="/callback" element={<OAuthCallback />} />
             <Route path="/register" element={<Register />} />

@@ -68,7 +68,7 @@ def login_oauth():
     return jsonify(authorization_url=authorization_url)
 
 
-@app.route("/callback", methods=['GET'])
+@app.route("/callback", methods=['GET', 'POST'])
 def oauth_callback():
     try:
         user_oauth = users_service.get_user_oauth()
@@ -88,23 +88,27 @@ def oauth_callback():
             accountNew = Accounts(name=fullname, email=email, password=password, user_id=users.id)
             db.session.add(accountNew)
             db.session.commit()
+            role_name = UsersRole(accountNew.users_role_id).name
             access_token = create_access_token(
                 identity={"user_id": accountNew.user_id, "name": accountNew.name,
                           "role": accountNew.users_role_id.value})
-            return jsonify({"access_token": access_token, "message": "successful"})
+            redirect_url = f"http://localhost:3000/callback?access_token={access_token}&user_id={accountNew.user_id}&role={role_name}"
+            return redirect(redirect_url)
         else:
+            role_name = UsersRole(account.users_role_id).name
             access_token = create_access_token(
                 identity={"user_id": account.user_id, "name": account.name, "role": account.users_role_id.name})
-            return jsonify({"access_token": access_token, "message": "successful"})
+            redirect_url = f"http://localhost:3000/callback?access_token={access_token}&user_id={account.user_id}&role={role_name}"
+            return redirect(redirect_url)
     except Exception as err:
         print(err)
         return jsonify({'message': 'Invalid credentials'}), 401
 
 
 @app.route('/protected', methods=['GET'])
-@jwt_required()  # Đảm bảo rằng chỉ người dùng có token hợp lệ mới truy cập được
+@jwt_required()  
 def protected():
-    current_user = get_jwt_identity()  # Lấy thông tin người dùng từ token
+    current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
 
 
@@ -138,9 +142,11 @@ def view_category():
 @app.route("/categories/<categoryId>", methods=['GET'])
 def view_product_by_categoryId(categoryId):
     return products_service.get_products_by_categoryId(categoryId)
+
+
 @app.route('/categories-info/<id>', methods=['GET'])
 def get_category_by_id(id):
-    return  categories_service.get_categories(id)
+    return categories_service.get_categories(id)
 
 
 @app.route("/categories/delete/<category_id>", methods=['DELETE'])
@@ -175,6 +181,7 @@ def add_category():
     else:
         return jsonify("Fail"), 401
 
+
 # API Products-------------------------------------------->
 @app.route("/products", methods=['GET'])
 def view_product():
@@ -194,23 +201,31 @@ def view_product_by_name_and_price():
 @app.route("/products/search/<name>", methods=['GET'])
 def view_product_by_name(name):
     return products_service.get_product_by_name(name)
-@app.route("/products/change-active/<product_id>", methods=['PATCH','POST'])
+
+
+@app.route("/products/change-active/<product_id>", methods=['PATCH', 'POST'])
 def remove_product(product_id):
     return products_service.change_active_product(product_id=product_id)
-#Account--------------------------------------------------------------
+
+
+# Account--------------------------------------------------------------
 @app.route('/get-all-account', methods=['GET'])
 def get_all_account():
     return account_service.get_all_account()
+
+
 @app.route('/get-account/<id>', methods=['GET'])
 def get_account_by_id(id):
     return account_service.get_account_by_id(id)
+
+
 @app.route('/change-active-account/<id>', methods=['PATCH'])
 def change_active_account(id):
-   result= account_service.chang_active_account(id)
-   if result:
-       return jsonify("Sucessful"),200
-   else:
-       return jsonify("Fail"), 401
+    result = account_service.chang_active_account(id)
+    if result:
+        return jsonify("Sucessful"), 200
+    else:
+        return jsonify("Fail"), 401
 
 
 @app.route('/create-account', methods=['POST'])
@@ -222,7 +237,7 @@ def create_account():
     password = data.get('password')
     email = data.get('email')
     users_role_id = data.get('user_role_id')
-    email_exists=account_service.email_exists(email=email)
+    email_exists = account_service.email_exists(email=email)
     print(email_exists)
     is_account = account_service.username_exists(username)
     print(is_account)
@@ -233,7 +248,8 @@ def create_account():
         print("kkkkk")
         return jsonify(msg="Tên tài khoản đã tồn tại")
     else:
-        account_service.add_account(username=username, password=password, name=name, user_role_id=users_role_id, email=email)
+        account_service.add_account(username=username, password=password, name=name, user_role_id=users_role_id,
+                                    email=email)
         return jsonify(msg="Tài khoản đã được tạo thành công"), 201
 
 
@@ -244,6 +260,7 @@ def remove_account(id):
         return jsonify("Sucessful"), 200
     else:
         return jsonify("Fail"), 401
+
 
 # API Cart------------------------------------------------------------------
 @app.route('/cart_count/<user_id>', methods=['GET'])
@@ -320,7 +337,9 @@ def get_list_order_statis():
     data = request.get_json()
     month = data.get('month')
     year = data.get('year')
-    return order_service.get_order_details_with_info(month,year)
+    return order_service.get_order_details_with_info(month, year)
+
+
 @app.route("/order/create-order-customer", methods=['POST'])
 def create_order_customer():
     try:
@@ -485,13 +504,14 @@ def add_address():
 
 
 # Shipper-----------------------------------------------------------
-#Statistic------------------------------------------------------
+# Statistic------------------------------------------------------
 @app.route('/get-revenue-product', methods=['GET'])
 def get_revenue_product():
     current_date = datetime.now()
     year = current_date.year
     month = current_date.month
-    return statis_service.doanh_thu_san_pham_theo_thang_nam(month,year)
+    return statis_service.doanh_thu_san_pham_theo_thang_nam(month, year)
+
 
 @app.route('/get-inventory', methods=['GET'])
 def get_inventory():
@@ -507,6 +527,7 @@ def get_product_best_seller_month():
         return jsonify({"error": "Missing month or year"}), 400
     return statis_service.get_best_selling_product(month, year)
 
+
 @app.route('/get-revenue', methods=['POST'])
 def get_revenue():
     data = request.get_json()
@@ -516,6 +537,7 @@ def get_revenue():
         return jsonify({"error": "Missing month or year"}), 400
     return statis_service.get_revenue(month, year)
 
+
 @app.route('/get-total-item-sold', methods=['POST'])
 def get_total_item_sold():
     data = request.get_json()
@@ -524,6 +546,7 @@ def get_total_item_sold():
     if month is None or year is None:
         return jsonify({"error": "Missing month or year"}), 400
     return statis_service.get_total_items_sold(month, year)
+
 
 @app.route('/get-revenue-quarter', methods=['POST'])
 def revenue_by_quarter():
@@ -535,6 +558,7 @@ def revenue_by_quarter():
         'quarters': revenue
     })
 
+
 @app.route('/get-revenue-category', methods=['POST'])
 def get_revenue_category():
     data = request.get_json()
@@ -542,20 +566,26 @@ def get_revenue_category():
     year = data.get('year')
     return statis_service.doanh_thu_theo_danh_muc(month, year)
 
+
 @app.route('/get-revenue-product', methods=['POST'])
 def get_revenue_product_pie():
     data = request.get_json()
     month = data.get('month')
     year = data.get('year')
     return statis_service.get_revenue_product(month, year)
+
+
 @app.route('/get-revenue-two-year', methods=['POST'])
 def get_revenue_two_year():
     data = request.get_json()
     year = data.get('year')
-    return statis_service.get_revenue_last_2_years( year)
+    return statis_service.get_revenue_last_2_years(year)
+
+
 @app.route('/get-revenue-three-year', methods=['GET'])
 def get_revenue_three_year():
     return statis_service.get_revenue_last_3_years()
+
 
 if __name__ == "__main__":
     app.run(host='localhost', port=5001, debug=True)

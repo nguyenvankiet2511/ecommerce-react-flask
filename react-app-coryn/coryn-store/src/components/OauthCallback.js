@@ -1,39 +1,43 @@
-import React, { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function OAuthCallback() {
-  const location = useLocation();  // Lấy URL hiện tại
-  const navigate = useNavigate();  // Điều hướng
-
+const OAuthCallback = () => {
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
+  
   useEffect(() => {
-    // Lấy mã ủy quyền từ URL (sau khi Google chuyển hướng người dùng về)
-    const searchParams = new URLSearchParams(location.search);
-    const code = searchParams.get("code");
+    handleCallback();
+  }, []);
 
-    if (code) {
-      // Gọi API đến Flask /callback để trao đổi mã ủy quyền lấy token
-      axios.get(`http://localhost:5000/callback?code=${code}`)
-        .then(response => {
-          const accessToken = response.data.access_token;
+  const handleCallback = () => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const access_token = queryParams.get('access_token');
+    const user_id = queryParams.get('user_id');
+    const role = queryParams.get('role');
 
-          // Lưu token vào localStorage
-          localStorage.setItem("token", accessToken);
+    if (access_token) {
+      // Save token and other info in localStorage
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('user_id', user_id);
+      localStorage.setItem('role', role);
+      
+      // Log success message for debugging
+      console.log('Đăng nhập thành công:', access_token);
 
-          // Chuyển hướng người dùng về trang chủ hoặc trang mong muốn sau khi đăng nhập thành công
-          navigate("/");
-        })
-        .catch(error => {
-          console.error("Lỗi khi lấy token từ Google", error);
-        });
+      // Redirect user after successful login
+      navigate('/');
     } else {
-      console.error("Không có mã ủy quyền trong URL");
+      // Set error message if access token is missing
+      setErrorMessage('Thiếu thông tin xác thực. Vui lòng thử lại.');
     }
-  }, [location, navigate]);
+  };
 
   return (
     <div>
-      <h3>Đang xử lý đăng nhập...</h3>
+      <h1>Đang xử lý đăng nhập...</h1>
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
     </div>
   );
-}
+};
+
+export default OAuthCallback;
