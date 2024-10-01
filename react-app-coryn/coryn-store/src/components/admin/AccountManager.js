@@ -98,7 +98,7 @@ export default function AccountManager() {
                         <td>{account.id}</td>
                         <td>{account.name}</td>
                         <td>{account.email}</td>
-                        <td>{account.username||"Tài khoản gmail"}</td>
+                        <td>{account.username||"Tài khoản Google"}</td>
                         <td>{account.active ? "Đang hoạt động" : "Bị khóa"}</td>
                         <td>{account.users_role_id}</td>
                         <td>

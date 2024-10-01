@@ -26,25 +26,7 @@ export default function Login() {
     }
   };
 
-  useEffect(() => {
-    const query = new URLSearchParams(window.location.search);
-    const token = query.get('access_token'); // Lấy token từ URL
-  
-    if (token) {
-      localStorage.setItem("access_token", token); // Lưu token vào local storage
-      // Gọi API để xác thực token và nhận dữ liệu người dùng
-      oauthLoginApi.fetchUserData(token)
-        .then(response => {
-          console.log(response.data); // Xử lý thông tin người dùng
-          const userId = response.data.user_id; // Giả sử có user_id
-          localStorage.setItem("user_id", userId); // Lưu user_id
-          navigate('/home'); // Chuyển hướng đến trang chính
-        })
-        .catch(error => {
-          console.error('Error fetching user data:', error);
-        });
-    }
-  }, [navigate]);
+ 
 
  
 
@@ -77,6 +59,7 @@ export default function Login() {
       console.log(response.data);
       const accessToken = response.data.access_token;
       const user_id = response.data.user_id;
+      const account_id = response.data.account_id;
       const role = response.data.role;
 
       console.log(role);
@@ -84,6 +67,8 @@ export default function Login() {
 
       localStorage.setItem("token", accessToken);
       localStorage.setItem("user_id", user_id);
+      localStorage.setItem("account_id", account_id);
+      localStorage.setItem("role", role);
 
       if (selectedRole == role) {
         if (selectedRole == "ADMIN") {

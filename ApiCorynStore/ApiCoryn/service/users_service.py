@@ -18,6 +18,10 @@ accounts_schema= AccountsSchema(many=True)
 user_schema= UsersSchema()
 users_schema= UsersSchema(many=True)
 
+
+
+
+
 def get_user_oauth():
     flow.fetch_token(authorization_response=request.url)
 

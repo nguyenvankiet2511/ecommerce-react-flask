@@ -30,5 +30,6 @@ export const isLoggedIn = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user_id');
     localStorage.removeItem('role');
+    localStorage.removeItem('account_id');
 }
   

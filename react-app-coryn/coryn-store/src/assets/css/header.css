@@ -488,7 +488,7 @@ section
 	right: 0;
 	top: 120%;
 	margin: 0;
-	width: 150px;
+	width: 180px;
 	background: #FFFFFF;
 	visibility: hidden;
 	opacity: 0;
@@ -505,7 +505,7 @@ section
 	padding-left: 10px;
 	padding-right: 10px;
 	line-height: 50px;
-	width: 150px;
+	width: 180px;
 }
 .account_selection li a
 {

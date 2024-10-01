@@ -9,6 +9,12 @@ const accountsApi = {
 
   },
 
+  getAccountCustomer: ()=>{
+    const url = "/get-account-customer";
+    return axiosClient.get(url);
+
+  },
+
   getAccountById: (id)=>{
     const url = `/get-account/${id}`;
     return axiosClient.get(url);

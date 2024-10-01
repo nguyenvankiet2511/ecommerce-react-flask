@@ -6,6 +6,7 @@ import accountsApi from "../../api/accountsApi";
 export default function HeaderAdmin({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName]= useState("");
+  const [user,setUser]= useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,7 +19,13 @@ export default function HeaderAdmin({ children }) {
       }
     };
     fetchCurrentUser();
+    fetchInfUser();
   }, []);
+
+  const fetchInfUser= async ()=>{
+    const user= await accountsApi.getInfUser(parseInt(localStorage.getItem('user_id'),10));
+    setUser(user.data);
+  }
   
   
 
@@ -120,7 +127,7 @@ export default function HeaderAdmin({ children }) {
                 <li className="nav-item-emp dropdown">
                   <a className="nav-link profile-toggle-emp" href="#">
                     <img
-                      src={`${process.env.PUBLIC_URL}/images/avatar-01.jpg`}
+                      src={`${process.env.PUBLIC_URL}/images/${user.photoPath}`}
                       alt="Charles Hall"
                       className="avatar-emp"
                     />
@@ -128,7 +135,7 @@ export default function HeaderAdmin({ children }) {
                     <span>{name||"Loading.."}</span>
                   </a>
                   <div className="dropdown-menu-emp">
-                    <Link className="dropdown-item-emp" to="/employee/profile">
+                    <Link className="dropdown-item-emp" to="/admin/profile">
                       Hồ sơ
                     </Link>
                     <a className="dropdown-item-emp" href="#">

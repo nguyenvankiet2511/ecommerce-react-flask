@@ -6,6 +6,7 @@ import accountsApi from "../../api/accountsApi";
 export default function HeaderEmployee({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName]= useState("");
+  const [user, setUser]= useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,9 +19,13 @@ export default function HeaderEmployee({ children }) {
       }
     };
     fetchCurrentUser();
+    fetchInfUser();
   }, []);
   
-  
+  const fetchInfUser= async ()=>{
+    const user= await accountsApi.getInfUser(parseInt(localStorage.getItem('user_id'),10));
+    setUser(user.data);
+  }
 
   // Hàm toggle mở/đóng sidebar
   const toggleSidebar = () => {
@@ -54,7 +59,7 @@ export default function HeaderEmployee({ children }) {
                 </Link>
               </li>
               <li className="sidebar-item-emp">
-                <Link className="sidebar-link-emp" to="/customercare">
+                <Link className="sidebar-link-emp" to="/employee/customer-care">
                   <i className="fa-solid fa-headset"></i>{" "}
                   <span>Chăm sóc khách hàng</span>
                 </Link>
@@ -101,10 +106,10 @@ export default function HeaderEmployee({ children }) {
               </div>
               <ul className="navbar-nav-emp">
                 <li className="nav-item-emp dropdown">
-                  <a className="nav-icon-emp" href="#" id="alertsDropdown">
+                  <Link className="nav-icon-emp" to="/employee/customer-care" id="alertsDropdown">
                     <i className="fa-solid fa-bell"></i>
                     <span className="indicator-emp">4</span>
-                  </a>
+                  </Link>
                 </li>
                 <li className="nav-item-emp dropdown">
                   <a className="nav-icon-emp" href="#" id="messagesDropdown">
@@ -114,7 +119,7 @@ export default function HeaderEmployee({ children }) {
                 <li className="nav-item-emp dropdown">
                   <a className="nav-link profile-toggle-emp" href="#">
                     <img
-                      src={`${process.env.PUBLIC_URL}/images/avatar-01.jpg`}
+                      src={`${process.env.PUBLIC_URL}/images/${user.photoPath}`}
                       alt="Charles Hall"
                       className="avatar-emp"
                     />

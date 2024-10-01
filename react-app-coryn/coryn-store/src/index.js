@@ -56,6 +56,11 @@ import AccountManager from "./components/admin/AccountManager";
 import UpdateAccount from "./components/admin/UpdateAccount";
 import CreateAccount from "./components/admin/CreateAccount";
 import Statistic from "./components/admin/Statistic";
+import PaymentCallback from "./components/PaymentCallback";
+import PaymentPage from "./components/PaymentPage";
+import Chat from "./components/Chat";
+import CustomerCare from "./components/employee/CustomerCare";
+import ProfileAdmin from "./components/admin/ProfileAdmin";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -69,6 +74,8 @@ root.render(
             <Route path="/" element={<App />} />
             <Route path="/login" element={<Login />} />
             <Route path="/callback" element={<OAuthCallback />} />
+            <Route path="/payment" element={<PaymentPage />} />
+            <Route path="/payment-callback" element={<PaymentCallback />} />
             <Route path="/register" element={<Register />} />
             <Route path="/products" element={<Products />}>
               <Route path=":productId" element={<Products />} />
@@ -82,12 +89,14 @@ root.render(
             <Route path="/blog" element={<Blog />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
+            <Route path="/chatbox" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/history" element={<HistoryOrder />} />
             <Route path="/sucessful-checkout" element={<SucessfulCheckout />} />
             <Route path="/employee" element={<HomeEmployee />} />
             <Route path="/employee/profile" element={<ProfileEmployee />} />
+            <Route path="/employee/customer-care" element={<CustomerCare />} />
             <Route path="/employee/order-manager" element={<OrderManager />} />
             <Route path="/employee/payment" element={<Payment />} />
             <Route path="/invoice/" element={<Invoice />}>
@@ -97,19 +106,32 @@ root.render(
               path="/employee/order-detail/:orderId"
               element={<OrderDetail />}
             />
-             <Route path="/admin" element={<HomeAdmin/>}/>
-
-            <Route path="/admin/category-manager" element={<CategoriesManager/>}/>
-            <Route path="/admin/create-category" element={<CreateCategory/>}/>
-            <Route path="/admin/update-category/:categoryId" element={<UpdateCategory/>}/>
-
-            <Route path="/admin/product-manager" element={<ProductsManager/>}/>
-            <Route path="/admin/create-product" element={<CreateProduct/>}/>
-            <Route path="/admin/update-product/:productId" element={<UpdateProduct />} />
-
-            <Route path="/admin/account-manager" element={<AccountManager/>}/>
-            <Route path="/admin/create-account" element={<CreateAccount/>}/>
-            <Route path="/admin/update-account/:accountId" element={<UpdateAccount />} />
+            <Route path="/admin" element={<HomeAdmin />} />
+            <Route path="/admin/profile" element={<ProfileAdmin />} />
+            <Route
+              path="/admin/category-manager"
+              element={<CategoriesManager />}
+            />
+            <Route path="/admin/create-category" element={<CreateCategory />} />
+            <Route
+              path="/admin/update-category/:categoryId"
+              element={<UpdateCategory />}
+            />
+            <Route
+              path="/admin/product-manager"
+              element={<ProductsManager />}
+            />
+            <Route path="/admin/create-product" element={<CreateProduct />} />
+            <Route
+              path="/admin/update-product/:productId"
+              element={<UpdateProduct />}
+            />
+            <Route path="/admin/account-manager" element={<AccountManager />} />
+            <Route path="/admin/create-account" element={<CreateAccount />} />
+            <Route
+              path="/admin/update-account/:accountId"
+              element={<UpdateAccount />}
+            />
             <Route path="/admin/statistic" element={<Statistic />} />
           </Routes>
         </ScrollToTop>

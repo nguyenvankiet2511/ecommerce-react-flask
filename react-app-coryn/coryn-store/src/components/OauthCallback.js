@@ -13,12 +13,14 @@ const OAuthCallback = () => {
     const queryParams = new URLSearchParams(window.location.search);
     const access_token = queryParams.get('access_token');
     const user_id = queryParams.get('user_id');
+    const account_id = queryParams.get('account_id');
     const role = queryParams.get('role');
 
     if (access_token) {
       // Save token and other info in localStorage
       localStorage.setItem('token', access_token);
       localStorage.setItem('user_id', user_id);
+      localStorage.setItem('account_id', account_id);
       localStorage.setItem('role', role);
       
       // Log success message for debugging

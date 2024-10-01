@@ -188,7 +188,7 @@ export default function Products() {
                     href="#"
                     className="btn btn-black py-3 px-5 mr-2"
                     onClick={(e) => {
-                      e.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ <a>
+                      e.preventDefault();
                       handleAddToCart(product);
                     }}
                   >
@@ -220,28 +220,6 @@ export default function Products() {
                   >
                     Description
                   </a>
-                  <a
-                    className="nav-link  mr-lg-1"
-                    id="v-pills-2-tab"
-                    data-toggle="pill"
-                    href="#v-pills-2"
-                    role="tab"
-                    aria-controls="v-pills-2"
-                    aria-selected="false"
-                  >
-                    Manufacturer
-                  </a>
-                  <a
-                    className="nav-link "
-                    id="v-pills-3-tab"
-                    data-toggle="pill"
-                    href="#v-pills-3"
-                    role="tab"
-                    aria-controls="v-pills-3"
-                    aria-selected="false"
-                  >
-                    Reviews
-                  </a>
                 </div>
               </div>
               <div className="col-md-12 tab-wrap">
@@ -257,22 +235,37 @@ export default function Products() {
                       <p>On her way she met a copy...</p>
                     </div>
                   </div>
-                  <div
-                    className="tab-pane fade"
-                    id="v-pills-2"
-                    role="tabpanel"
-                    aria-labelledby="v-pills-2-tab"
+                </div>
+              </div>
+            </div>
+            <div className="row mt-5">
+              <div className="col-md-12 nav-link-wrap">
+                <div
+                  className="nav nav-pills d-flex text-center"
+                  id="v-pills-tab"
+                  role="tablist"
+                  aria-orientation="vertical"
+                >
+                  <a
+                    className="nav-link  active mr-lg-1"
+                    id="v-pills-1-tab"
+                    data-toggle="pill"
+                    href="#v-pills-1"
+                    role="tab"
+                    aria-controls="v-pills-1"
+                    aria-selected="true"
                   >
-                    <div className="p-4">
-                      <h3 className="mb-4">Manufactured By Nike</h3>
-                      <p>On her way she met a copy...</p>
-                    </div>
-                  </div>
+                    Review
+                  </a>
+                </div>
+              </div>
+              <div className="col-md-12 tab-wrap">
+                <div className="tab-content bg-light" id="v-pills-tabContent">
                   <div
-                    className="tab-pane fade"
-                    id="v-pills-3"
+                    className="tab-pane fade show active"
+                    id="v-pills-1"
                     role="tabpanel"
-                    aria-labelledby="v-pills-3-tab"
+                    aria-labelledby="v-pills-1-tab"
                   >
                     <div className="row p-4">
                       <div className="col-md-7">
@@ -306,25 +299,46 @@ export default function Products() {
                             <p>When she reached the first hills...</p>
                           </div>
                         </div>
-                        {/* Add more reviews as needed */}
-                      </div>
-                      <div className="col-md-4">
-                        <div className="rating-wrap">
-                          <h3 className="mb-4">Give a Review</h3>
-                          <p className="star">
-                            <span>
-                              <i className="ion-ios-star-outline"></i>
-                              <i className="ion-ios-star-outline"></i>
-                              <i className="ion-ios-star-outline"></i>
-                              <i className="ion-ios-star-outline"></i>
-                              <i className="ion-ios-star-outline"></i>
-                              (98%)
-                            </span>
-                            <span>20 Reviews</span>
-                          </p>
-                          {/* Add more star ratings as needed */}
+                        <div className="review">
+                          <div
+                            className="user-img"
+                            style={{
+                              backgroundImage: "url(images/person_1.jpg)",
+                            }}
+                          ></div>
+                          <div className="desc">
+                            <h4>
+                              <span className="text-left">Jacob Webb</span>
+                              <span className="text-right">14 March 2018</span>
+                            </h4>
+                            <p className="star">
+                              <span>
+                                <i className="ion-ios-star-outline"></i>
+                                <i className="ion-ios-star-outline"></i>
+                                <i className="ion-ios-star-outline"></i>
+                                <i className="ion-ios-star-outline"></i>
+                                <i className="ion-ios-star-outline"></i>
+                              </span>
+                              <span className="text-right">
+                                <a href="#" className="reply">
+                                  <i className="icon-reply"></i>
+                                </a>
+                              </span>
+                            </p>
+                            <p>When she reached the first hills...</p>
+                          </div>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  <div className="comment-section">
+                    
+                    <textarea
+                      id="comment-box"
+                      placeholder="Nhập bình luận của bạn..."
+                    ></textarea>
+                    <div className="comment-footer">
+                      <button id="submit-btn-comment">Gửi bình luận</button>
                     </div>
                   </div>
                 </div>
@@ -332,6 +346,7 @@ export default function Products() {
             </div>
           </div>
         </section>
+
         <section className="bg-light">
           <div className="container">
             <div className="row justify-content-center mb-3 pb-3">

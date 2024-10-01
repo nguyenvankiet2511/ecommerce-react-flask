@@ -7,8 +7,8 @@ import axios from "axios";
 import { useCart } from "../../components/context/CartContext";
 
 export default function Header() {
-  const { cartCount, updateCartCount } = useCart(0)|| {};
-  const [checkLoggedIn,setCheckLoggedIn] = useState(false) ;
+  const { cartCount, updateCartCount } = useCart(0) || {};
+  const [checkLoggedIn, setCheckLoggedIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const userId = localStorage.getItem("user_id");
   const [menuActive, setMenuActive] = useState(false);
@@ -60,7 +60,7 @@ export default function Header() {
     const fetchCountCart = async () => {
       try {
         const count = await cartApi.getCountCartByUserId(userId);
-        updateCartCount(count.data.cart_count); 
+        updateCartCount(count.data.cart_count);
       } catch (error) {
         console.error("Error fetching cart count:", error);
       }
@@ -73,10 +73,10 @@ export default function Header() {
     try {
       // Clear tokens or perform any logout operations
       deleteTokens();
-  
+
       console.log("User logged out");
-  
-      if (window.location.pathname === '/') {
+
+      if (window.location.pathname === "/") {
         window.location.reload();
       } else {
         navigate("/");
@@ -85,7 +85,6 @@ export default function Header() {
       console.error("Error during logout:", error);
     }
   };
-  
 
   const setHeader = () => {
     const header = headerRef.current;
@@ -120,15 +119,16 @@ export default function Header() {
   };
 
   const handleCartClick = () => {
-    
     if (checkLoggedIn) {
-      navigate('/cart');
+      navigate("/cart");
     } else {
       // Hộp thoại xác nhận đăng nhập
-      const userConfirmed = window.confirm("Bạn cần đăng nhập để tiếp tục. Bạn có muốn đăng nhập không?");
-      
+      const userConfirmed = window.confirm(
+        "Bạn cần đăng nhập để tiếp tục. Bạn có muốn đăng nhập không?"
+      );
+
       if (userConfirmed) {
-        navigate('/login'); // Điều hướng đến trang đăng nhập nếu người dùng chọn "OK"
+        navigate("/login"); // Điều hướng đến trang đăng nhập nếu người dùng chọn "OK"
       }
       // Nếu người dùng chọn "Cancel", không làm gì cả
     }
@@ -213,7 +213,7 @@ export default function Header() {
                           {checkLoggedIn ? (
                             <>
                               <li>
-                                <Link to="login">
+                                <Link to="/profile">
                                   <i
                                     className="fa fa-user"
                                     aria-hidden="true"
@@ -228,6 +228,15 @@ export default function Header() {
                                     aria-hidden="true"
                                   ></i>
                                   Đã mua
+                                </Link>
+                              </li>
+                              <li>
+                                <Link to="/chatbox">
+                                  <i
+                                    className="fas fa-comment"
+                                    aria-hidden="true"
+                                  ></i>
+                                  Hỗ trợ trực tuyến
                                 </Link>
                               </li>
                               <li>

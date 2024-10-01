@@ -1,11 +1,16 @@
+import hashlib
+import hmac
 import os
+import urllib
+import urllib.parse
 from datetime import datetime
 
-from ApiCoryn import app, flow, db
+from ApiCoryn import app, flow, db, VNP_TMN_CODE, VNP_HASH_SECRET, \
+    VNP_URL, socketio
 from flask_cors import cross_origin
 from ApiCoryn.service import users_service, categories_service, products_service, cart_service, shipper_sevice, \
     address_service, order_service, orderDetail_service, account_service, statis_service
-from ApiCoryn.model import UsersRole, Accounts, Users, Customers, Carts, Orders, OrderDetails
+from ApiCoryn.model import UsersRole, Accounts, Users, Customers, Carts, Orders, OrderDetails, Messages
 from flask import render_template, session, flash, jsonify, redirect, request, session
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
@@ -27,6 +32,52 @@ def user_login():
     #     return render_template('login.html')
     # else:
     #     return render_template('login.html')
+
+
+@app.route('/get-account-customer', methods=['GET'])
+def get_account_customer():
+    return account_service.get_all_accounts_info_with_avatar()
+#VNPAY-----------------------------------------------
+
+@app.route('/create-payment', methods=['POST'])
+def create_payment():
+    # Lấy thông tin đơn hàng từ client
+    order_id = "âfafaafa"
+    amount = 100
+    return_url = "https://localhost:5001/payment_result"
+
+    # Thời gian hiện tại
+    vnp_time = datetime.now().strftime("%Y%m%d%H%M%S")
+
+    # Tạo tham số cho VNPAY
+    vnp_params = {
+        'vnp_Version': '2.1.0',
+        'vnp_TmnCode': VNP_TMN_CODE,
+        'vnp_Amount': str(amount * 100),  # Đơn vị là đồng
+        'vnp_Command': 'pay',
+        'vnp_OrderInfo': 'Thanh toán đơn hàng ' + str(order_id),
+        'vnp_OrderId': order_id,
+        'vnp_PaymentType': 'banking',
+        'vnp_ReturnUrl': return_url,
+        'vnp_CreateDate': vnp_time,
+    }
+
+    # Tạo mã hash
+    sorted_params = sorted(vnp_params.items())
+    hash_data = '&'.join(['{}={}'.format(k, v) for k, v in sorted_params])
+    hash_data += '&vnp_SecureHash=' + hashlib.sha512((hash_data + '&' + VNP_HASH_SECRET).encode('utf-8')).hexdigest()
+
+    vnp_url = VNP_URL + '?' + hash_data
+    return jsonify(payment_url=vnp_url)
+
+
+@app.route('/payment_result', methods=['GET'])
+def payment_result():
+    # Xử lý kết quả thanh toán từ VNPAY
+    vnp_response = request.args.to_dict()
+    # Thực hiện xác thực lại kết quả thanh toán nếu cần
+    # ...
+    return jsonify(vnp_response)
 
 
 @app.route("/login", methods=['POST', 'GET'])
@@ -56,6 +107,7 @@ def auth_login():
             "access_token": access_token,
             "user_id": user.user_id,
             "role": role_name,
+            "account_id": user.id,
             "message": "successful"
         })
     else:
@@ -80,7 +132,7 @@ def oauth_callback():
             password = str(hashlib.md5('123456'.encode('utf-8')).hexdigest())
             fullname = user_oauth['name']
             image = user_oauth['picture']
-            users = Users(name=fullname, email=email, photoPath=image)
+            users = Users(name=fullname, email=email, photoImg=image)
             db.session.add(users)
             db.session.flush()
             customer = Customers(id=users.id)
@@ -92,17 +144,39 @@ def oauth_callback():
             access_token = create_access_token(
                 identity={"user_id": accountNew.user_id, "name": accountNew.name,
                           "role": accountNew.users_role_id.value})
-            redirect_url = f"http://localhost:3000/callback?access_token={access_token}&user_id={accountNew.user_id}&role={role_name}"
+            redirect_url = f"http://localhost:3000/callback?access_token={access_token}&user_id={accountNew.user_id}&role={role_name}&account_id={accountNew.id}"
             return redirect(redirect_url)
         else:
             role_name = UsersRole(account.users_role_id).name
             access_token = create_access_token(
                 identity={"user_id": account.user_id, "name": account.name, "role": account.users_role_id.name})
-            redirect_url = f"http://localhost:3000/callback?access_token={access_token}&user_id={account.user_id}&role={role_name}"
+            redirect_url = f"http://localhost:3000/callback?access_token={access_token}&user_id={account.user_id}&role={role_name}&account_id={account.id}"
             return redirect(redirect_url)
     except Exception as err:
         print(err)
         return jsonify({'message': 'Invalid credentials'}), 401
+
+
+@app.route("/register", methods=['POST'])
+def create_account_customer():
+    try:
+        data = request.get_json()
+        if not all(key in data for key in ('name', 'email', 'username', 'password')):
+            return jsonify({"error": "All fields are required"}), 400
+        full_name = data['name']
+        email = data['email']
+        username = data['username']
+        password = data['password']
+        if account_service.username_exists(username):
+            return jsonify({"message": "Username đã tồn tại"}), 201
+        if account_service.email_exists(email):
+            return jsonify({"message": "Email đã được đăng ký"}), 201
+        account = account_service.add_account_customer(full_name, username, password, email)
+        return jsonify({"message": "Tài khoản được đăng ký thành công!", "username": account.username, 'password': password}), 200
+
+    except Exception as e:
+        print(f"Error creating account: {e}")
+        return jsonify({"error": "Máy chủ không phản hồi. Vui lòng thử lại sau!"}), 500
 
 
 @app.route('/protected', methods=['GET'])
@@ -115,6 +189,7 @@ def protected():
 @app.route('/get-user/<id>', methods=['GET'])
 def get_inf_user(id):
     return users_service.get_inf_user(id)
+
 
 
 @app.route('/update-user/<int:user_id>', methods=['PATCH'])
@@ -585,7 +660,65 @@ def get_revenue_two_year():
 @app.route('/get-revenue-three-year', methods=['GET'])
 def get_revenue_three_year():
     return statis_service.get_revenue_last_3_years()
+#Chat-----------------------------------------------------
+
+@socketio.on('new_message')
+def handle_new_message(data):
+    socketio.emit('new_message', data)
+
+@socketio.on('connect')
+def handle_connect():
+    print("A user has connected.")
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print("A user has disconnected.")
+
+@app.route('/send-messages', methods=['POST'])
+def send_message():
+    data = request.get_json()
+    buyer_id = data.get('buyer_id')
+    content = data.get('content')
+    role = data.get('role')
+
+    if not buyer_id or not content or not role:
+        return jsonify({'status': 'error', 'message': 'Thiếu dữ liệu bắt buộc'}), 400
+
+    # Tạo tin nhắn tùy thuộc vào role
+    if role == 'CUSTOMER':
+        message = Messages(
+            buyer_id=buyer_id,
+            content=content
+        )
+    else:
+        message = Messages(
+            buyer_id=buyer_id,
+            content=content,
+            serder=True
+        )
+    db.session.add(message)
+    db.session.commit()
+    formatted_timestamp = message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+    socketio.emit('new_message', {
+        'timestamp': formatted_timestamp,
+        'content': message.content,
+        'buyer_id': message.buyer_id,
+        'serder': message.serder
+    })
+
+    return jsonify({'status': 'success'}), 200
+
+
+@app.route('/get-messages/<int:buyer_id>', methods=['GET'])
+def get_messages(buyer_id):
+    messages = Messages.query.filter_by(buyer_id=buyer_id).all()
+    return jsonify([{
+        'serder': msg.serder,
+        'content': msg.content,
+        'buyer_id': msg.buyer_id,
+        'timestamp': msg.timestamp.strftime('%Y-%m-%d %H:%M:%S')  # Định dạng thời gian
+    } for msg in messages]), 200
 
 
 if __name__ == "__main__":
-    app.run(host='localhost', port=5001, debug=True)
+    socketio.run(app, host='localhost', port=5001, debug=True, allow_unsafe_werkzeug=True,use_reloader=False)

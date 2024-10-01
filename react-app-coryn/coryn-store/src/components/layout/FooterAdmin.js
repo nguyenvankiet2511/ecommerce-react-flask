@@ -49,7 +49,7 @@ export default function FooterAdmin() {
             <div className="row-emp">
               <div className="col-lg-12-emp text-center">
                 <div className="footer__copyright__text-emp">
-                  <p>Welcome to our shopping page {new Date().getFullYear()} <i className="fa fa-heart-o" aria-hidden="true"></i> by <a href="index.html" target="_blank" rel="noopener noreferrer">Cosmic Store</a></p>
+                  <p>Welcome to our shopping page {new Date().getFullYear()} <i className="fa fa-heart-o" aria-hidden="true"></i> by <a href="#" target="_blank" rel="noopener noreferrer">Cosmic Store</a></p>
                 </div>
               </div>
             </div>
