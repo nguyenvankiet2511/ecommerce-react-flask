@@ -56,22 +56,25 @@ import AccountManager from "./components/admin/AccountManager";
 import UpdateAccount from "./components/admin/UpdateAccount";
 import CreateAccount from "./components/admin/CreateAccount";
 import Statistic from "./components/admin/Statistic";
-import PaymentCallback from "./components/PaymentCallback";
-import PaymentPage from "./components/PaymentPage";
+import PaymentCallback from "./components/PaymentExecute";
+import PaymentPage from "./components/PaypalPayment";
 import Chat from "./components/Chat";
 import CustomerCare from "./components/employee/CustomerCare";
 import ProfileAdmin from "./components/admin/ProfileAdmin";
+import PayPalButton from "./components/PaypalPayment";
+import PaymentExecute from "./components/PaymentExecute";
+import CancelPaypal from "./components/CancelPaypal";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <CartProvider>
-        {" "}
-        {/* Wrap the application with CartProvider */}
         <ScrollToTop>
           <Routes>
             <Route path="/" element={<App />} />
+            <Route path="/execute" element={<PaymentExecute/>} />
+            <Route path="/cancel" element={<CancelPaypal/>} />
             <Route path="/login" element={<Login />} />
             <Route path="/callback" element={<OAuthCallback />} />
             <Route path="/payment" element={<PaymentPage />} />

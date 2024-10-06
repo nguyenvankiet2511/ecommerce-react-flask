@@ -76,7 +76,7 @@ body:not(.body-main) {
   color: #212529;
   text-align: left;
   background-color: #fff;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 [tabindex="-1"]:focus {
@@ -14272,7 +14272,7 @@ textarea.form-control {
 /**/
 
 #chat-container {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   padding: 50px 20px;
   margin: 40px 60px 0;
   display: flex; /* Sử dụng Flexbox để bố trí */
@@ -14308,45 +14308,40 @@ textarea.form-control {
   border-radius: 10px; /* Bo góc cho khu vực tin nhắn */
   padding: 10px;
   background-color: #f1f1f1;
- 
 }
-.min-width-message{
+.min-width-message {
   min-width: 200px !important;
 }
 
 #messages div {
-  
 }
 
-.messages-chatbox{
+.messages-chatbox {
   margin: 5px 0;
   padding: 10px;
-  border-radius: 10px; 
+  border-radius: 10px;
   max-width: 70%;
   transition: background-color 0.3s;
-
 }
 
 .buyer-message {
-  background-color: #a8e6cf; 
-  color: #003f3f; 
-  align-self: flex-end; 
-  border-radius: 10px; 
-  margin: 5px 0; 
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  background-color: #a8e6cf;
+  color: #003f3f;
+  align-self: flex-end;
+  border-radius: 10px;
+  margin: 5px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .seller-message {
   background-color: #ffcccb; /* Màu hồng nhạt */
   color: #6a1b9a; /* Màu chữ đỏ sẫm cho sự tương phản tốt */
-  align-self: flex-start; 
-  border-radius: 20px; 
-  padding: 12px; 
-  margin: 5px 0; 
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  align-self: flex-start;
+  border-radius: 20px;
+  padding: 12px;
+  margin: 5px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
-
 
 .timestamp {
   display: block; /* Để hiển thị thời gian trên một dòng riêng */
@@ -14360,11 +14355,8 @@ textarea.form-control {
   margin-top: 10px;
 }
 
- 
-
-
 #message-input {
-  flex: 1; 
+  flex: 1;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 10px; /* Bo góc */
@@ -14447,10 +14439,9 @@ textarea.form-control {
 
 .background-chatbox {
   background-color: #e8f5e9; /* Màu xanh lục nhạt */
-  padding: 20px; 
-  border-radius: 10px; 
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
- 
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .helle2 {
@@ -14458,7 +14449,7 @@ textarea.form-control {
   font-weight: 700; /* In đậm */
   color: #ffffff; /* Màu chữ trắng */
   background: linear-gradient(135deg, #6fb1fc, #4364f7); /* Gradient màu nền */
- 
+
   text-align: center; /* Căn giữa */
   margin: 20px 0; /* Khoảng cách trên và dưới */
   letter-spacing: 2px; /* Khoảng cách giữa các chữ cái */
@@ -14467,10 +14458,9 @@ textarea.form-control {
   padding: 10px; /* Khoảng cách bên trong */
   border-radius: 10px; /* Bo góc */
 }
-.messages-img{
+.messages-img {
   margin-right: 10px;
 }
-
 
 /*Comment Product*/
 
@@ -14509,5 +14499,25 @@ textarea.form-control {
   background-color: #0056b3;
 }
 
+.success-container-cancel {
+  color: #ff0000; /* Màu chữ đỏ */
+  text-align: center; /* Căn giữa nội dung */
+}
 
+.icon-container-cancel i {
+  color: #ff0000; /* Màu biểu tượng đỏ */
+  font-size: 40px; /* Kích thước biểu tượng */
+}
 
+.btn-success-cancel {
+  background-color: #ff0000; /* Nền nút đỏ */
+  color: white; /* Màu chữ nút trắng */
+  padding: 10px 20px; /* Đệm cho nút */
+  border: none; /* Bỏ viền nút */
+  border-radius: 5px; /* Bo góc nút */
+  text-decoration: none; /* Bỏ gạch chân */
+}
+
+.btn-success-cancel:hover {
+  background-color: #e60000; /* Màu nền khi di chuột vào nút */
+}

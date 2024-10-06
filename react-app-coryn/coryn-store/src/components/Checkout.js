@@ -5,8 +5,10 @@ import Footer from "./layout/Footer";
 import { CartProvider } from "./context/CartContext";
 import addressApi from "../api/addressApi";
 import orderApi from "../api/orderApi";
+import paypalApi from "../api/paypalApi";
 
 export default function Checkout() {
+  const exchangeRate= 24000;
   const navigate = useNavigate()
   const location = useLocation();
   const {
@@ -149,8 +151,8 @@ export default function Checkout() {
       case "Check Payment":
         handleCheckPayment();
         break;
-      case "VNPAY":
-        handleVNPAYPayment();
+      case "Paypal":
+        handlePaypalPayment();
         break;
       default:
         alert("Phương thức thanh toán không hợp lệ.");
@@ -199,9 +201,25 @@ export default function Checkout() {
   };
 
   // Xử lý thanh toán qua VNPAY
-  const handleVNPAYPayment = () => {
-    alert("Bạn đã chọn VNPAY.");
-    // Thêm logic xử lý cho VNPAY (ví dụ: chuyển hướng tới cổng thanh toán VNPAY, xử lý callback, etc.)
+  const handlePaypalPayment = async () => {
+   const data={
+      amount: ((totalAmount+ shippingFee)/exchangeRate).toFixed(2),
+      customer_id: userId, 
+      address_id: selectedAddress, 
+      shipper_id: shipperId, 
+      total: totalAmount+ shippingFee, 
+      paymentMethods: paymentMethod, 
+      l_productId: listCart.map((item) => item.product_id), 
+      l_quantity: listCart.map((item) => item.quantity), 
+      l_cartId: listCart.map((item) => item.cart_id), 
+    }
+   const response= await paypalApi.createPaypal(data);
+    if (response.status==200) {
+      await orderApi.addOrderByCustomer(data);
+      window.location.href = response.data.approval_url; 
+    } else {
+      console.error('Lỗi khi tạo đơn hàng');
+    }
   };
 
   return (
@@ -450,11 +468,11 @@ export default function Checkout() {
                                 <input
                                   type="radio"
                                   name="optradio"
-                                  value="VNPAY"
+                                  value="Paypal"
                                   onChange={handlePaymentMethodChange}
                                   className="mr-2"
                                 />{" "}
-                                VNPAY
+                               Paypal
                               </label>
                             </div>
                           </div>

@@ -1,3 +1,4 @@
+import paypalrestsdk
 from flask_socketio import SocketIO
 
 from flask import Flask, jsonify
@@ -33,9 +34,8 @@ flow = Flow.from_client_secrets_file(
     redirect_uri='http://localhost:5001/callback'
 )
 
-
-
-VNP_URL = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
-VNP_TMN_CODE = "1DY0DXEN"
-VNP_HASH_SECRET = "FE02HKE27OPWPTSKYCD4WQ63QD9P68OD"
-VNP_API = "https://sandbox.vnpayment.vn/"
+paypalrestsdk.configure({
+    "mode": "sandbox",
+    "client_id": "AffK2pwjqrzQUJQNTQ29uHMykflsYB4EHi4mons04-yauzIUHKUWp0gO6__58rfZwwtCC5sfvwsGj3Ga",
+    "client_secret": "EITnSGG0p9X79_X1ms492us83sCrQMlNYYm7PkBcfIsniR5YvVTdXGfG_6MzA5cOVV59LJApOEZxU_bc"
+})

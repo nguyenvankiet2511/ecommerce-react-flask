@@ -518,7 +518,7 @@ export default function Statistic() {
                     {/* Doanh thu theo danh mục */}
                     <div className="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-12">
                       <div className="card card-statis heigh-chart">
-                        <h5 className="card-header">Doanh Thu Theo Danh Mục</h5>
+                        <h5 className="card-header">Doanh thu theo sản phẩm năm {currentYear}</h5>
                         <div className="card-body">
                           <ProductRevenueDonutChart
                             revenueProduct={revenueProductPie}

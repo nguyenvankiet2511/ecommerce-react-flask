@@ -4,14 +4,14 @@ import os
 import urllib
 import urllib.parse
 from datetime import datetime
+import paypalrestsdk
 
-from ApiCoryn import app, flow, db, VNP_TMN_CODE, VNP_HASH_SECRET, \
-    VNP_URL, socketio
+from ApiCoryn import app, flow, db, socketio
 from flask_cors import cross_origin
 from ApiCoryn.service import users_service, categories_service, products_service, cart_service, shipper_sevice, \
     address_service, order_service, orderDetail_service, account_service, statis_service
 from ApiCoryn.model import UsersRole, Accounts, Users, Customers, Carts, Orders, OrderDetails, Messages
-from flask import render_template, session, flash, jsonify, redirect, request, session
+from flask import render_template, session, flash, jsonify, redirect, request, session, url_for
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 
@@ -37,48 +37,65 @@ def user_login():
 @app.route('/get-account-customer', methods=['GET'])
 def get_account_customer():
     return account_service.get_all_accounts_info_with_avatar()
-#VNPAY-----------------------------------------------
-
-@app.route('/create-payment', methods=['POST'])
-def create_payment():
-    # Lấy thông tin đơn hàng từ client
-    order_id = "âfafaafa"
-    amount = 100
-    return_url = "https://localhost:5001/payment_result"
-
-    # Thời gian hiện tại
-    vnp_time = datetime.now().strftime("%Y%m%d%H%M%S")
-
-    # Tạo tham số cho VNPAY
-    vnp_params = {
-        'vnp_Version': '2.1.0',
-        'vnp_TmnCode': VNP_TMN_CODE,
-        'vnp_Amount': str(amount * 100),  # Đơn vị là đồng
-        'vnp_Command': 'pay',
-        'vnp_OrderInfo': 'Thanh toán đơn hàng ' + str(order_id),
-        'vnp_OrderId': order_id,
-        'vnp_PaymentType': 'banking',
-        'vnp_ReturnUrl': return_url,
-        'vnp_CreateDate': vnp_time,
+#Paypal-----------------------------------------------
+@app.route('/create-order-paypal', methods=['POST'])
+def create_order_pay():
+    data = request.json
+    amount = data.get('amount')
+    order_data = {
+        'customer_id': data.get('customer_id'),
+        'address_id': data.get('address_id'),
+        'shipper_id': data.get('shipper_id'),
+        'total': data.get('total'),
+        'payment_methods': data.get('paymentMethods'),
+        'l_product_id': data.get('l_productId'),
+        'l_quantity': data.get('l_quantity'),
+        'l_cart_id': data.get('l_cartId'),
     }
 
-    # Tạo mã hash
-    sorted_params = sorted(vnp_params.items())
-    hash_data = '&'.join(['{}={}'.format(k, v) for k, v in sorted_params])
-    hash_data += '&vnp_SecureHash=' + hashlib.sha512((hash_data + '&' + VNP_HASH_SECRET).encode('utf-8')).hexdigest()
 
-    vnp_url = VNP_URL + '?' + hash_data
-    return jsonify(payment_url=vnp_url)
+    # Tạo đối tượng Payment
+    payment = paypalrestsdk.Payment({
+        "intent": "sale",
+        "payer": {
+            "payment_method": "paypal"
+        },
+        "transactions": [{
+            "amount": {
+                "total": str(amount),
+                "currency": "USD"
+            },
+            "description": "Thanh toán cho sản phẩm"
+        }],
+        "redirect_urls": {
+            "return_url": "http://localhost:3000/execute",
+            "cancel_url": "http://localhost:3000/cancel"
+        },
+        "application_context": {
+            "locale": "vi-VN"
+        }
+    })
 
+    # Tạo thanh toán
+    if payment.create():
+        approval_url = next(link.href for link in payment.links if link.rel == "approval_url")
+        return jsonify({"approval_url": approval_url, "data": order_data}), 200
+    else:
+        return jsonify({"error": payment.error}), 400
 
-@app.route('/payment_result', methods=['GET'])
-def payment_result():
-    # Xử lý kết quả thanh toán từ VNPAY
-    vnp_response = request.args.to_dict()
-    # Thực hiện xác thực lại kết quả thanh toán nếu cần
-    # ...
-    return jsonify(vnp_response)
+@app.route('/execute', methods=['POST'])
+def execute_payment():
+    data = request.json
+    payment_id = data.get('paymentId')
+    payer_id = data.get('payerId')
 
+    print( payment_id,payer_id)
+
+    payment = paypalrestsdk.Payment.find(payment_id)
+    if payment.execute({"payer_id": payer_id}):
+        return jsonify({"id": payment.id})
+    else:
+        return jsonify({"error": payment.error}), 400
 
 @app.route("/login", methods=['POST', 'GET'])
 def auth_login():
@@ -716,7 +733,7 @@ def get_messages(buyer_id):
         'serder': msg.serder,
         'content': msg.content,
         'buyer_id': msg.buyer_id,
-        'timestamp': msg.timestamp.strftime('%Y-%m-%d %H:%M:%S')  # Định dạng thời gian
+        'timestamp': msg.timestamp.strftime('%Y-%m-%d %H:%M:%S')
     } for msg in messages]), 200
 
 

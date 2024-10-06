@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask import jsonify
+from sqlalchemy import desc, case
 from sqlalchemy.orm import aliased, joinedload
 
 from ApiCoryn import db
@@ -71,22 +72,24 @@ def change_order_detail(order_id, l_quantity, l_price, l_discount, l_order_detai
 
 
 def get_orders_with_products(customer_id):
-    # Lấy tất cả đơn hàng của khách hàng theo customer_id
     orders = (
         Orders.query
         .options(
-            joinedload(Orders.order_details).joinedload(OrderDetails.product)  # Tải chi tiết đơn hàng và sản phẩm
+            joinedload(Orders.order_details).joinedload(OrderDetails.product)
         )
         .filter_by(customer_id=customer_id)
+        .order_by(
+            case(
+                (Orders.active == False, 0),  # Đơn hàng không hoạt động sẽ được xếp trước
+                else_=1
+            ),
+            desc(Orders.orderDate)  # Sắp xếp theo orderDate giảm dần
+        )
         .all()
     )
     orders_list = [order_to_dict(order) for order in orders]
+    return orders_list
 
-    # Sắp xếp danh sách đơn hàng để những đơn hàng có active = False lên trên
-    orders_list_sorted = sorted(orders_list, key=lambda x: x['active'])
-
-    # Trả về dữ liệu JSON
-    return orders_list_sorted
 
 def order_detail_to_dict(order_detail):
     return {
