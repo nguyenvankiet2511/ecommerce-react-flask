@@ -5,17 +5,23 @@ import cartApi from "../api/cartApi";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import { useCart } from "./context/CartContext";
+import feedbackApi from "../api/feedbackApi";
 
 export default function Products() {
   const params = useParams();
   const { updateCartCount } = useCart();
   const [product, setProduct] = useState([null]);
   const [products, setProducts] = useState([]);
-  const [quantity, setQuantity] = useState(1); // Khởi tạo state cho số lượng
+  const [quantity, setQuantity] = useState(1);
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [rating, setRating] = useState(0); // Lưu trữ rating
+  const [hoverRating, setHoverRating] = useState(0); // Lưu trữ rating khi hover
+  const [comment, setComment] = useState(""); // Lưu trữ comment
 
   useEffect(() => {
     fetchProductId();
     fetchProducts();
+    fetchFeedback();
   }, [params.productId]);
 
   const fetchProductId = async () => {
@@ -35,20 +41,65 @@ export default function Products() {
       console.error("Error fetching products:", err);
     }
   };
+  const fetchFeedback = async () => {
+    const feedback = await feedbackApi.getFeedbackProduct(
+      parseInt(params.productId, 10)
+    );
+    console.log(feedback.data);
+    setFeedbacks(feedback.data);
+  };
 
-  // Hàm xử lý khi nhấn nút tăng
   const handleIncrease = () => {
-    setQuantity((prevQuantity) => Math.min(prevQuantity + 1, 100)); // Giới hạn tối đa 100
+    setQuantity((prevQuantity) => Math.min(prevQuantity + 1, 100));
   };
 
-  // Hàm xử lý khi nhấn nút giảm
   const handleDecrease = () => {
-    setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1)); // Giới hạn tối thiểu 1
+    setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1));
   };
 
-  // Hàm xử lý thêm sản phẩm vào giỏ hàng
+  //set rating
+
+  const handleStarClick = (ratingValue) => {
+    setRating(ratingValue);
+  };
+
+  const handleStarHover = (ratingValue) => {
+    setHoverRating(ratingValue);
+  };
+
+  const handleStarHoverOut = () => {
+    setHoverRating(0);
+  };
+
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const accountId = localStorage.getItem("account_id");
+    if (!accountId) {
+      alert("Bạn cần đăng nhập để gửi đánh giá!");
+      return; 
+    }
+    const data = {
+      accountId: accountId,
+      productId: params.productId,
+      rate: rating,
+      comment: comment,
+    };
+  
+    try {
+      await feedbackApi.addFeedbackProduct(data);
+      fetchFeedback();
+      setComment(""); 
+    setRating(0); 
+    } catch (error) {
+      console.error("Lỗi khi gửi đánh giá:", error);
+    }
+  };
+  
   const handleAddToCart = async (product) => {
-    // Lấy thông tin sản phẩm và số lượng
     const data = {
       product_id: product.id,
       quantity: quantity,
@@ -269,78 +320,99 @@ export default function Products() {
                   >
                     <div className="row p-4">
                       <div className="col-md-7">
-                        <h3 className="mb-4">23 Reviews</h3>
-                        <div className="review">
-                          <div
-                            className="user-img"
-                            style={{
-                              backgroundImage: "url(images/person_1.jpg)",
-                            }}
-                          ></div>
-                          <div className="desc">
-                            <h4>
-                              <span className="text-left">Jacob Webb</span>
-                              <span className="text-right">14 March 2018</span>
-                            </h4>
-                            <p className="star">
-                              <span>
-                                <i className="ion-ios-star-outline"></i>
-                                <i className="ion-ios-star-outline"></i>
-                                <i className="ion-ios-star-outline"></i>
-                                <i className="ion-ios-star-outline"></i>
-                                <i className="ion-ios-star-outline"></i>
-                              </span>
-                              <span className="text-right">
-                                <a href="#" className="reply">
-                                  <i className="icon-reply"></i>
-                                </a>
-                              </span>
-                            </p>
-                            <p>When she reached the first hills...</p>
+                        <h3 className="mb-4">{feedbacks.length} Reviews</h3>
+                        {feedbacks.map((feedback, index) => (
+                          <div key={index} className="review">
+                            <div
+                              className="user-img"
+                              style={{
+                                backgroundImage: `url(${
+                                  feedback.user_photo
+                                    ? `/images/${feedback.user_photo}`
+                                    : "/images/default_user.jpg"
+                                })`,
+                              }}
+                            ></div>
+                            <div className="desc">
+                              <h4>
+                                <span className="text-left">
+                                  {feedback.user_name}
+                                </span>
+                                <span className="text-right">
+                                  {new Date(
+                                    feedback.create_date
+                                  ).toLocaleDateString()}
+                                </span>
+                              </h4>
+                              <p className="star">
+                                <span>
+                                  {[...Array(5)].map((_, i) => (
+                                    <i
+                                      key={i}
+                                      className={
+                                        i < feedback.rating
+                                          ? "ion-ios-star"
+                                          : "ion-ios-star-outline"
+                                      }
+                                    ></i>
+                                  ))}
+                                </span>
+                                <span className="text-right">
+                                  <a href="#" className="reply">
+                                    <i className="icon-reply"></i>
+                                  </a>
+                                </span>
+                              </p>
+                              <p>{feedback.comment}</p>
+                            </div>
                           </div>
-                        </div>
-                        <div className="review">
-                          <div
-                            className="user-img"
-                            style={{
-                              backgroundImage: "url(images/person_1.jpg)",
-                            }}
-                          ></div>
-                          <div className="desc">
-                            <h4>
-                              <span className="text-left">Jacob Webb</span>
-                              <span className="text-right">14 March 2018</span>
-                            </h4>
-                            <p className="star">
-                              <span>
-                                <i className="ion-ios-star-outline"></i>
-                                <i className="ion-ios-star-outline"></i>
-                                <i className="ion-ios-star-outline"></i>
-                                <i className="ion-ios-star-outline"></i>
-                                <i className="ion-ios-star-outline"></i>
-                              </span>
-                              <span className="text-right">
-                                <a href="#" className="reply">
-                                  <i className="icon-reply"></i>
-                                </a>
-                              </span>
-                            </p>
-                            <p>When she reached the first hills...</p>
-                          </div>
-                        </div>
+                        ))}
                       </div>
                     </div>
                   </div>
-                  <div className="comment-section">
-                    
-                    <textarea
-                      id="comment-box"
-                      placeholder="Nhập bình luận của bạn..."
-                    ></textarea>
-                    <div className="comment-footer">
-                      <button id="submit-btn-comment">Gửi bình luận</button>
+                  <form onSubmit={handleSubmit}>
+                    <div className="comment-section">
+                      {/* Chọn Rating */}
+                      <div className="rating-section mb-3">
+                        {[...Array(5)].map((_, index) => {
+                          const ratingValue = index + 1;
+                          return (
+                            <i
+                              key={index}
+                              className={
+                                ratingValue <= (hoverRating || rating)
+                                  ? "ion-ios-star"
+                                  : "ion-ios-star-outline"
+                              }
+                              style={{
+                                cursor: "pointer",
+                                color: "#f1c40f",
+                                fontSize: "24px",
+                              }}
+                              onClick={() => handleStarClick(ratingValue)}
+                              onMouseEnter={() => handleStarHover(ratingValue)}
+                              onMouseLeave={handleStarHoverOut}
+                            ></i>
+                          );
+                        })}
+                      </div>
+
+                      {/* Ô nhập bình luận */}
+                      <textarea
+                        id="comment-box"
+                        placeholder="Nhập bình luận của bạn..."
+                        value={comment}
+                        onChange={handleCommentChange}
+                      ></textarea>
+
+                      {/* Nút Gửi bình luận */}
+                      <div className="comment-footer">
+                        <button id="submit-btn-comment" type="submit">
+                          Gửi bình luận
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>

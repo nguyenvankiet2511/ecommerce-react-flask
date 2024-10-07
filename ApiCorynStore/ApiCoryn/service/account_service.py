@@ -21,12 +21,14 @@ def get_account_customer():
 
 
 def get_all_accounts_info_with_avatar():
-    accounts = Accounts.query.all()
+    # Lọc các tài khoản có vai trò là CUSTOMER
+    accounts = Accounts.query.filter_by(users_role_id=UsersRole.CUSTOMER).all()
+
     if accounts:
         accounts_info = []
         for account in accounts:
             user = account.user
-            avatarPath= user.photoImg
+            avatarPath = user.photoImg
             avatar = user.photoPath
             account_info = {
                 "account_id": account.id,
@@ -38,7 +40,7 @@ def get_all_accounts_info_with_avatar():
             accounts_info.append(account_info)
         return jsonify(accounts_info)
     else:
-        return jsonify({"error": "No accounts found"}), 404
+        return jsonify({"error": "No customer accounts found"}), 404
 
 
 def get_account_by_id(id):

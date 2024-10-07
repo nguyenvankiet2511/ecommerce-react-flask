@@ -125,6 +125,7 @@ class FeedbackProduct(db.Model):
     product_id = Column(Integer, ForeignKey('Products.id'))
     rating = Column(Integer)
     comment = Column(Text)
+    createDate= Column(DateTime,default=datetime.now())
 
 
 class Shippers(db.Model):
@@ -475,16 +476,67 @@ if __name__ == '__main__':
         db.session.commit()
 
         data_mes = [
-            Messages(buyer_id=4, content="Chào bạn, tôi có thể hỏi về sản phẩm này không?"),
-            Messages(buyer_id=4, content="Sản phẩm này có sẵn màu nào vậy?", serder=True),
-            Messages(buyer_id=4, content="Giá sản phẩm này có thể thương lượng không?", serder=True),
-            Messages(buyer_id=4, content="Thời gian giao hàng mất bao lâu?"),
-            Messages(buyer_id=4, content="Sản phẩm này có bảo hành không?"),
-            Messages(buyer_id=4, content="Có thể gửi thêm hình ảnh của sản phẩm không?", serder=True),
-            Messages(buyer_id=4, content="Kích thước của sản phẩm này là gì?"),
-            Messages(buyer_id=4, content="Có thể đổi trả sản phẩm nếu không vừa không?", serder=True),
+            Messages(buyer_id=4, content="Chào bạn, tôi có thể hỏi về sản phẩm này không?"),  # Người mua
+            Messages(buyer_id=4, content="Chào bạn! Bạn cứ hỏi thoải mái nhé.", serder=True),  # Người bán
+            Messages(buyer_id=4, content="Sản phẩm này có sẵn màu nào vậy?"),  # Người mua
+            Messages(buyer_id=4, content="Hiện tại sản phẩm có màu đen và xanh bạn nhé.", serder=True),  # Người bán
+            Messages(buyer_id=4, content="Giá sản phẩm này có thể thương lượng không?"),  # Người mua
+            Messages(buyer_id=4, content="Giá sản phẩm đã được niêm yết cố định rồi bạn ạ.", serder=True),  # Người bán
+            Messages(buyer_id=4, content="Thời gian giao hàng mất bao lâu?"),  # Người mua
+            Messages(buyer_id=4, content="Giao hàng trong khoảng 3-5 ngày làm việc, tùy vào địa chỉ của bạn.",
+                     serder=True),  # Người bán
+            Messages(buyer_id=4, content="Sản phẩm này có bảo hành không?"),  # Người mua
+            Messages(buyer_id=4, content="Dạ có, bảo hành 12 tháng cho mọi lỗi của nhà sản xuất.", serder=True),
+            # Người bán
+            Messages(buyer_id=4, content="Có thể gửi thêm hình ảnh của sản phẩm không?"),  # Người mua
+            Messages(buyer_id=4, content="Dạ, tôi sẽ gửi thêm hình ảnh cho bạn ngay bây giờ.", serder=True),
+            # Người bán
+            Messages(buyer_id=4, content="Kích thước của sản phẩm này là gì?"),  # Người mua
+            Messages(buyer_id=4, content="Kích thước sản phẩm là 15x20cm bạn nhé.", serder=True),
+            Messages(buyer_id=4, content="Có thể đổi trả sản phẩm nếu không vừa không?"),
+            Messages(buyer_id=4,
+                     content="Dạ, bên tôi hỗ trợ đổi trả trong vòng 7 ngày nếu sản phẩm có lỗi hoặc không vừa.",
+                     serder=True),
             Messages(buyer_id=4, content="Sản phẩm này có thể sử dụng cho những mục đích nào?"),
-            Messages(buyer_id=4, content="Bạn có thể cho tôi biết thêm về chính sách giao hàng không?", serder=True)
+            Messages(buyer_id=4,
+                     content="Sản phẩm này phù hợp cho nhiều mục đích, từ sử dụng cá nhân đến làm quà tặng.",
+                     serder=True),
+            Messages(buyer_id=5, content="Xin chào, sản phẩm này có còn hàng không?"),  # Người mua
+            Messages(buyer_id=5, content="Chào bạn! Hiện tại sản phẩm này vẫn còn hàng bạn nhé.", serder=True),
+            # Người bán
+            Messages(buyer_id=5, content="Giá sản phẩm đã bao gồm phí vận chuyển chưa?"),  # Người mua
+            Messages(buyer_id=5,
+                     content="Giá trên chưa bao gồm phí vận chuyển bạn ạ. Phí sẽ tùy thuộc vào địa chỉ giao hàng của bạn.",
+                     serder=True),
+            Messages(buyer_id=5, content="Tôi ở Hà Nội, vậy phí vận chuyển là bao nhiêu?"),
+            Messages(buyer_id=5,
+                     content="Phí vận chuyển tới Hà Nội khoảng 30.000 đồng. Tuy nhiên, nếu bạn đặt hàng trên 500.000 đồng, chúng tôi sẽ miễn phí vận chuyển.",
+                     serder=True),
+            Messages(buyer_id=5, content="Thời gian bảo hành của sản phẩm là bao lâu?"),
+            Messages(buyer_id=5, content="Sản phẩm này được bảo hành 24 tháng bạn nhé.", serder=True),
+            Messages(buyer_id=5, content="Nếu sản phẩm bị lỗi trong quá trình sử dụng thì xử lý thế nào?"),
+            Messages(buyer_id=5,
+                     content="Nếu sản phẩm bị lỗi do nhà sản xuất, bạn có thể gửi lại cho chúng tôi để được sửa chữa hoặc đổi mới miễn phí.",
+                     serder=True),
+            Messages(buyer_id=5, content="Có hỗ trợ trả góp không?"),
+            Messages(buyer_id=5,
+                     content="Hiện tại bên chúng tôi chưa hỗ trợ trả góp cho sản phẩm này, nhưng bạn có thể thanh toán bằng nhiều hình thức khác nhau.",
+                     serder=True),
+            Messages(buyer_id=5, content="Cảm ơn bạn! Tôi sẽ xem xét và đặt hàng sau."),
+            Messages(buyer_id=5,
+                     content="Không có gì! Cảm ơn bạn đã quan tâm. Nếu cần thêm thông tin, bạn cứ liên hệ với chúng tôi nhé.",
+                     serder=True)
+
         ]
+
         db.session.add_all(data_mes)
+        db.session.commit()
+
+
+        feedbackP_data=[
+            FeedbackProduct(user_id=4, product_id=1, rating=4,comment="Sản phẩm tốt", createDate= datetime(2024,2,15)),
+            FeedbackProduct(user_id=4, product_id=1, rating=5, comment="Chất lượng đúng như mô tả", createDate=datetime(2024,4,25))
+        ]
+
+        db.session.add_all(feedbackP_data)
         db.session.commit()

@@ -9,7 +9,7 @@ const socket = io("http://localhost:5001");
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const messagesRef = useRef(null); // Ref to access the messages container
+  const messagesRef = useRef(null); 
 
   useEffect(() => {
     loadMessages();
@@ -24,17 +24,15 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    // Scroll to the bottom when messages change
     if (messagesRef.current) {
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
     }
-  }, [messages]); // This will run whenever messages change
+  }, [messages]);
 
   const loadMessages = async () => {
     try {
       const response = await chatApi.getMessages(parseInt(localStorage.getItem('account_id'), 10));
       setMessages(response.data);
-      // Scroll to the bottom after loading messages
       if (messagesRef.current) {
         messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
       }
@@ -63,7 +61,7 @@ const Chat = () => {
             <h2 className="helle2">Liên hệ với Cosmic Store</h2>
             <div
               id="messages"
-              ref={messagesRef} // Attach ref to the messages div
+              ref={messagesRef} 
               style={{
                 height: "300px",
                 overflowY: "scroll",

@@ -9,7 +9,7 @@ import paypalrestsdk
 from ApiCoryn import app, flow, db, socketio
 from flask_cors import cross_origin
 from ApiCoryn.service import users_service, categories_service, products_service, cart_service, shipper_sevice, \
-    address_service, order_service, orderDetail_service, account_service, statis_service
+    address_service, order_service, orderDetail_service, account_service, statis_service, feedback_service
 from ApiCoryn.model import UsersRole, Accounts, Users, Customers, Carts, Orders, OrderDetails, Messages
 from flask import render_template, session, flash, jsonify, redirect, request, session, url_for
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -735,6 +735,23 @@ def get_messages(buyer_id):
         'buyer_id': msg.buyer_id,
         'timestamp': msg.timestamp.strftime('%Y-%m-%d %H:%M:%S')
     } for msg in messages]), 200
+#FeedbackProduct------------------------------------------------------
+@app.route("/get-feedback-product/<product_id>", methods=['GET'])
+def get_feedback_product(product_id):
+    return feedback_service.get_feedback_product(product_id)
+
+@app.route("/add-feedback-product", methods=['POST'])
+def create_feedback_products():
+    data= request.get_json()
+    user_id= data.get('accountId')
+    comment= data.get("comment")
+    rating= data.get("rate")
+    product_id= data.get('productId')
+    feedback= feedback_service.create_feedback_product(user_id=user_id,comment=comment,rating=rating,productId=product_id)
+    if feedback:
+        return jsonify("Succesful"),200
+    else:
+        return jsonify("Fail")
 
 
 if __name__ == "__main__":

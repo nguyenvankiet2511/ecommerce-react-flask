@@ -80,10 +80,10 @@ def get_orders_with_products(customer_id):
         .filter_by(customer_id=customer_id)
         .order_by(
             case(
-                (Orders.active == False, 0),  # Đơn hàng không hoạt động sẽ được xếp trước
+                (Orders.active == False, 0),
                 else_=1
             ),
-            desc(Orders.orderDate)  # Sắp xếp theo orderDate giảm dần
+            desc(Orders.orderDate)
         )
         .all()
     )
