@@ -64,6 +64,7 @@ import ProfileAdmin from "./components/admin/ProfileAdmin";
 import PayPalButton from "./components/PaypalPayment";
 import PaymentExecute from "./components/PaymentExecute";
 import CancelPaypal from "./components/CancelPaypal";
+import TestPicture from "./components/TestPicture";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -72,7 +73,7 @@ root.render(
       <CartProvider>
         <ScrollToTop>
           <Routes>
-            <Route path="/" element={<App />} />
+            <Route path="/" element={<TestPicture />} />
             <Route path="/execute" element={<PaymentExecute/>} />
             <Route path="/cancel" element={<CancelPaypal/>} />
             <Route path="/login" element={<Login />} />

@@ -1,6 +1,7 @@
 import paypalrestsdk
 from flask_socketio import SocketIO
 
+
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -22,10 +23,13 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
 UPLOAD_FOLDER = 'public/images'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 jwt = JWTManager(app)
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+
 client_secrets_file = os.path.join(pathlib.Path(__file__).parent.parent, "oauth_config.json")
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
@@ -39,3 +43,5 @@ paypalrestsdk.configure({
     "client_id": "AffK2pwjqrzQUJQNTQ29uHMykflsYB4EHi4mons04-yauzIUHKUWp0gO6__58rfZwwtCC5sfvwsGj3Ga",
     "client_secret": "EITnSGG0p9X79_X1ms492us83sCrQMlNYYm7PkBcfIsniR5YvVTdXGfG_6MzA5cOVV59LJApOEZxU_bc"
 })
+
+
